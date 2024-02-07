@@ -1,0 +1,50 @@
+﻿@model Evento
+
+<head>
+    <link rel="stylesheet" href="~/css/botones.css" />
+</head>
+
+<h3>Configurar Evento <label class="text-muted">@Model.Nombre <i>(@Model.FechaInicio)</i></label></h3>
+
+<!--Acciones disponibles-->
+<fieldset class="mt-4">
+    <div class="card shadow">
+        <div class="card-header">
+            <partial name="_BotonAtras" />
+        </div>
+
+        <div class="card-body row d-flex m-3 justify-content-around">
+            <a class="btn btn-info boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+                asp-controller="Acreditado" asp-action="Index" asp-route-id="@Model.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi bi-people"></i>
+                    Acreditados
+                </span>
+            </a>
+
+            <a class="btn btn-success boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+                asp-action="Import" asp-route-id="@Model.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi bi-database"></i>
+                    Importar
+                </span>
+            </a>
+
+            <a class="btn btn-warning boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+                asp-action="Update" asp-route-id="@Model.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+                </span>
+            </a>
+
+            <a class="btn btn-danger boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+                asp-action="Delete" asp-route-id="@Model.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi bi-trash"></i>
+                    Borrar
+                </span>
+            </a>
+        </div>
+    </div>
+</fieldset>

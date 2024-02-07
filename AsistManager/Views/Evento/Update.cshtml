@@ -1,0 +1,49 @@
+﻿@using AsistManager.Models.ViewModels
+@model EventoViewModel
+
+<h3>
+    Editar Evento <label class="text-muted">@ViewBag.NombreEvento <i>(@ViewBag.FechaEvento)</i></label>
+</h3>
+
+<fieldset class="mt-4">
+    <div class="col-md-6 card shadow">
+        <div class="card-header">
+            <partial name="_BotonAtras" />
+        </div>
+
+        <div class="card-body">
+
+        <!--Form para editar el evento seleccionado-->
+            <form asp-action="Update" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!--Input para editar el Nombre-->
+                <div class="form-group mt-3">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" value="@ViewBag.NombreEvento" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <!--Input para editar la Fecha-->
+                <div class="form-group mt-3">
+                    <label asp-for="FechaInicio" class="control-label"></label>
+                    <input asp-for="FechaInicio" class="form-control" value="@(ViewBag.FechaEvento)" />
+                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                </div>
+
+                <!--Dirige a acción POST 'Update' del controlador-->
+                <button type="submit" class="btn btn-primary mt-4 w-100">
+                    <i class="bi bi-save"></i>
+                    Guardar cambios
+                </button>
+            </form>
+        </div>
+    </div>
+</fieldset>
+
+<!-- Importar scripts jQuery de validación -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

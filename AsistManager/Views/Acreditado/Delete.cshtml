@@ -1,0 +1,29 @@
+﻿@using AsistManager.Models.ViewModels
+@model Acreditado
+
+<h1>
+    Borrar registro
+</h1>
+
+<fieldset class="mt-4">
+    <div class="col-md-6 card shadow">
+        <div class="card-header">
+            <partial name="_BotonAtras" />
+        </div>
+
+        <div class="card-body">
+            <!--Form para borrar el acreditado seleccionado-->
+            <form asp-action="Delete" method="post">
+
+                <p class="fw-bold">¿Borrar el registro <label class="text-muted">@Model.Dni</label>?</p>
+
+                <!--Botones para borrar acreditado o ir atrás-->
+                <div class="form-group mt-3 d-flex flex-row justify-content-between">
+
+                    <!--Dirige a acción POST 'Delete' del controlador-->
+                    <input type="submit" value="Borrar registro" class="btn btn-danger mt-4 w-100" />
+                </div>
+            </form>
+        </div>
+    </div>
+</fieldset>

@@ -1,0 +1,96 @@
+﻿@using AsistManager.Models.ViewModels
+@model AcreditadoViewModel
+
+<h3>
+    Insertar nuevo acreditado
+</h3>
+
+<fieldset class="mt-4">
+    <div class="col-md-6 card shadow">
+        <div class="card-header">
+            <partial name="_BotonAtras" />
+        </div>
+
+        <div class="card-body">
+
+            <!--Form para crear nuevo acreditado-->
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!--Input para mostrar Evento-->
+                <div class="form-group mt-3">
+                    <label class="control-label">Evento</label>
+                    <input class="form-control" value="@ViewBag.Evento.Nombre (@ViewBag.Evento.FechaInicio)" disabled/>
+                </div>
+                
+                <div class="row mt-3">
+                    <!--Input de atributo Nombre-->
+                    <div class="form-group col-md-6">
+                        <label asp-for="Nombre" class="control-label fw-bold">
+                            Nombre *
+                        </label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    
+                    <!--Input de atributo Apellido-->
+                    <div class="form-group col-md-6">
+                        <label asp-for="Apellido" class="control-label fw-bold">
+                            Apellido *
+                        </label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+
+                    <!--Input de atributo Dni-->
+                    <div class="form-group col-md-4">
+                        <label asp-for="Dni" class="control-label fw-bold">
+                            DNI *
+                        </label>
+                        <input asp-for="Dni" class="form-control" />
+                        <span asp-validation-for="Dni" class="text-danger"></span>
+                    </div>
+
+                    <!--Input de atributo Cuit-->
+                    <div class="form-group col-md-8">
+                        <label asp-for="Cuit" class="control-label fw-bold">
+                            CUIT *
+                        </label>
+                        <input asp-for="Cuit" class="form-control" />
+                        <span asp-validation-for="Cuit" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!--Input de atributo Celular-->
+                <div class="form-group mt-3">
+                    <label asp-for="Celular" class="control-label"></label>
+                    <input asp-for="Celular" class="form-control" />
+                    <span asp-validation-for="Celular" class="text-danger"></span>
+                </div>
+
+                <!--Input de atributo Grupo-->
+                <div class="form-group mt-3">
+                    <label asp-for="Grupo" class="control-label"></label>
+                    <input asp-for="Grupo" class="form-control" />
+                    <span asp-validation-for="Grupo" class="text-danger"></span>
+                </div>
+
+                <!--Dirige a acción POST 'Create' del controlador-->
+                <button type="submit" class="btn btn-primary mt-4 w-100">
+                    <i class="bi bi-save"></i>
+                    Insertar acreditado
+                </button>
+            </form>
+        </div>
+    </div>
+</fieldset>
+
+<!--Importar scripts JQuery de validación-->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

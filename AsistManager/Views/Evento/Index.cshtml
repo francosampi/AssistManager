@@ -1,0 +1,64 @@
+﻿@model List<Evento>
+
+<h3>Listado de eventos</h3>
+
+<fieldset class="mt-4">
+
+    <!--Mostrar alerta-->
+    <partial name="_Alert"></partial>
+
+    <div class="card shadow">
+        <div class="card-header">
+
+            <!--Botón para agregar nuevo evento-->
+            <a class="btn btn-primary my-2" asp-action="Create">
+                <i class="bi bi-calendar4-event p-1"></i>
+                Nuevo
+            </a>
+        </div>
+        
+        <div class="card-body">
+
+            <!--Informar cantidad de eventos-->
+            @if (Model.Count == 0)
+            {
+                <label class="fw-bold text-danger">No se han encontrado eventos.</label>
+            }
+            else
+            {
+                <label class="fw-bold text-secondary">Mostrando @Model.Count evento(s)</label>
+            }
+
+            <!--Tabla de eventos con sus operaciones disponibles-->
+            <table class="table table-striped table-responsive mt-3">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Fecha de Inicio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--Recorrer los registros del Modelo-->
+                    @foreach (var evento in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(m => evento.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => evento.FechaInicio)
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-info" asp-action="Menu" asp-route-id="@evento.Id">
+                                    <i class="bi bi-gear"></i>
+                                    Configurar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</fieldset>

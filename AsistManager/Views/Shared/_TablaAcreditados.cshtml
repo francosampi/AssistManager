@@ -1,0 +1,31 @@
+﻿@model List<Acreditado>
+
+<table class="table table-striped tabla-registros mt-4">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>CUIT</th>
+            <th>Habilitado</th>
+            <th>Celular</th>
+            <th>Grupo</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!--Recorrer registros la lista de acreditados y mostrarlos-->
+        @foreach (var registro in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => registro.Nombre)</td>
+                <td>@Html.DisplayFor(m => registro.Apellido)</td>
+                <td>@Html.DisplayFor(m => registro.Dni)</td>
+                <td>@Html.DisplayFor(m => registro.Cuit)</td>
+                <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
+                <td>@Html.DisplayFor(m => registro.Celular)</td>
+                <td>@Html.DisplayFor(m => registro.Grupo)</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,50 @@
+﻿@model List<Acreditado>
+
+<h3>Listado de Acreditados: @ViewBag.Evento.Nombre <i>(@ViewBag.Evento.FechaInicio)</i></h3>
+
+<fieldset class="mt-4">
+
+    <!--Mostrar alerta-->
+    <partial name="_Alert"></partial>
+
+    <div class="card shadow">
+        <div class="card-header">
+            <partial name="_BotonAtras" />
+
+            <!--Botón para agregar nuevo acreditado-->
+            <a class="btn btn-primary" asp-action="Create" asp-route-id="@ViewBag.Evento.Id">
+                <i class="bi bi-people p-1"></i>
+                Nuevo
+            </a>
+
+            <!--Sección para buscar por DNI-->
+            <div class="my-3 row col-md-3">
+                <h5 class="text-muted">Buscar por DNI</h5>
+                <form asp-action="Search" method="get" asp-route-id="@ViewBag.Evento.Id">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="dni" placeholder="Ingrese DNI">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-info">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!--Informar cantidad de registros-->
+            @if (Model.Count == 0)
+            {
+                <label class="fw-bold text-danger">No se han encontrado registros asociados a este evento.</label>
+            }
+            else
+            {
+                <label class="fw-bold text-secondary">Mostrando @Model.Count acreditado(s)</label>
+            }
+
+            <!--Tabla de acreditados con sus operaciones disponibles-->
+            <partial name="_TablaAcreditadosControl" model="Model" />
+        </div>
+    </div>
+</fieldset>

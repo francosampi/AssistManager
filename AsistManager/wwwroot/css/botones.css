@@ -1,0 +1,12 @@
+﻿.boton-grande {
+    height: 5em;
+}
+
+.boton-grande-texto {
+    font-size: 2em;
+    color: #ffffff;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

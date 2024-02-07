@@ -1,0 +1,28 @@
+﻿@model Evento
+
+<h1>
+    Borrar evento
+</h1>
+
+<fieldset class="mt-4">
+    <div class="col-md-6 card shadow">
+        <div class="card-header">
+            <partial name="_BotonAtras" />
+        </div>
+
+        <div class="card-body">
+            <!--Form para borrar el evento seleccionado-->
+            <form asp-action="Delete" method="post">
+
+                <p class="fw-bold">¿Borrar el evento <label class="text-muted">@Model.Nombre<i>(@Model.FechaInicio)</i></label> junto con sus registros?</p>
+
+                <!--Botones para borrar evento o ir atrás-->
+                <div class="form-group mt-3 d-flex flex-row justify-content-between">
+
+                    <!--Dirige a acción POST 'Delete' del controlador-->
+                    <input type="submit" value="Borrar evento" class="btn btn-danger mt-4 w-100" />
+                </div>
+            </form>
+        </div>
+    </div>
+</fieldset>
