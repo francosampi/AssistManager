@@ -89,12 +89,12 @@
             <div class="d-flex justify-content-around">
 
                 <form asp-action="Entry" asp-route-id="@Model.Acreditado.Id" method="post"
-                class="d-flex justify-content-center align-items-center col">
+                    class="d-flex justify-content-center align-items-center col">
 
-                    <!--Habilitar botón solo si no existe ingreso-->
+                    <!--Habilitar botón solo si no existe un ingreso-->
                     <button type="submit"
-                    class="btn btn-info boton-grande shadow-sm"
-                    disabled="@(Model.Ingreso!=null && Model.Acreditado.Habilitado==true)">
+                        class="btn btn-info boton-grande shadow-sm"
+                        disabled="@(Model.Ingreso!=null || Model.Acreditado.Habilitado==true)">
 
                         <span class="boton-grande-texto">
                             <i class="bi-door-open"></i>
@@ -104,12 +104,12 @@
                 </form>
 
                 <form asp-action="Exit" asp-route-id="@Model.Acreditado.Id" method="post"
-                class="d-flex justify-content-center align-items-center col">
+                    class="d-flex justify-content-center align-items-center col">
 
-                    <!--Habilitar botón solo si existe ingreso y no existe egreso-->
+                    <!--Habilitar botón solo si existe un ingreso y no existe un egreso-->
                     <button type="submit"
-                    class="btn btn-dark boton-grande shadow-sm"
-                    disabled="@(Model.Ingreso==null && Model.Egreso!=null)">
+                        class="btn btn-dark boton-grande shadow-sm"
+                        disabled="@(Model.Ingreso == null || Model.Egreso != null)">
 
                         <span class="boton-grande-texto">
                             <i class="bi-door-open"></i>

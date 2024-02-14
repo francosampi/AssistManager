@@ -29,8 +29,8 @@
 
                 <!--Operaciones disponibles-->
                 <td class="text-end">
-                    <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.IdEvento">
-                        <i class="bi-door-closed"></i>
+                    <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.IdEvento" asp-route-dni="@registro.Dni">
+                        <i class="bi-list-check"></i>
                         Validar
                     </a>
                     <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Id">

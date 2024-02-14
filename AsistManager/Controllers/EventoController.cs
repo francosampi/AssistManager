@@ -295,6 +295,96 @@ namespace AsistManager.Controllers
         //Subir el excel de la base
         public async Task<IActionResult> Insert(IFormFile file)
         {
+            //Manejo de la codificación de caracteres específicos durante la lectura del archivo
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            //Lista temporal para mostrar los registros del archivo
+            List<Acreditado> registros = new List<Acreditado>();
+
+            //Verificar que el archivo no sea nulo
+            if (file != null && file.Length > 0)
+            {
+                //Crear directorio para guardarlo, y una lista temporal
+                var carpetaUploads = $"{Directory.GetCurrentDirectory()}\\wwwroot\\Uploads\\";
+                var filePath = Path.Combine(carpetaUploads, file.FileName);
+
+                if (!Directory.Exists(carpetaUploads))
+                {
+                    Directory.CreateDirectory(carpetaUploads);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                //Abrir archivo y leerlo linea por linea
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    try
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            int contadorRegistros = 0;
+                            int contadorAlertas = 0;
+                            bool flagHeader = false;
+
+                            do
+                            {
+                                //Cargar cada registro en la base, sin leer el encabezado
+                                while (reader.Read())
+                                {
+                                    if (!flagHeader)
+                                    {
+                                        flagHeader = true;
+                                        continue;
+                                    }
+
+                                    //Por cada registro, generar un objeto
+                                    Acreditado acreditado = new Acreditado();
+
+                                    acreditado.Nombre = reader.GetValue(0)?.ToString();
+                                    acreditado.Apellido = reader.GetValue(1)?.ToString();
+                                    acreditado.Dni = reader.GetValue(2)?.ToString();
+                                    acreditado.Cuit = reader.GetValue(3)?.ToString();
+                                    acreditado.Habilitado = Convert.ToBoolean(reader.GetValue(4)?.ToString());
+                                    acreditado.Celular = reader.GetValue(5)?.ToString();
+                                    acreditado.Grupo = reader.GetValue(6)?.ToString();
+
+                                    if (acreditado.Dni == null)
+                                    {
+                                        contadorAlertas++;
+                                    }
+
+                                    _context.Acreditados.Add(acreditado);
+                                    contadorRegistros++;
+                                }
+                            } while (reader.NextResult());
+
+                            await _context.SaveChangesAsync();
+
+                            //Informar lo acontecido (registros leídos y alertas por igual)
+                            string mensajeRegistros = "Se han leído los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
+                            string mensajeAlerta = contadorAlertas > 0 ? "Hay <b>" + contadorAlertas + " alerta(s)</b>." : "";
+
+                            if (contadorRegistros == 0)
+                            {
+                                mensajeRegistros = "Este archivo se encuentra vacío.";
+                                TempData["AlertaTipo"] = "warning";
+                            }
+
+                            ViewData["Registros"] = registros;
+                            TempData["AlertaMensaje"] = mensajeRegistros + mensajeAlerta;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Informar error
+                        TempData["AlertaTipo"] = "danger";
+                        TempData["AlertaMensaje"] = "Error al leer el archivo. (" + ex.Message + ")";
+                    }
+                }
+            }
 
             return View(nameof(Import));
         }

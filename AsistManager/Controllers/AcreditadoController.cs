@@ -209,7 +209,7 @@ namespace AsistManager.Controllers
                 .Include(a => a.IdEventoNavigation)
                 .FirstOrDefault(a => a.Id == id);
 
-            // Verificar si el acreditado existe y tiene un evento asignado
+            //Verificar si el acreditado existe y tiene un evento asignado
             if (acreditado?.IdEventoNavigation == null)
             {
                 return NotFound();
