@@ -1,6 +1,6 @@
 ﻿@model List<Acreditado>
 
-<table class="table table-striped tabla-registros mt-4">
+<table class="table table-hover tabla-registros mt-4">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -28,7 +28,11 @@
                 <td>@Html.DisplayFor(m => registro.Grupo)</td>
 
                 <!--Operaciones disponibles-->
-                <td>
+                <td class="text-end">
+                    <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.IdEvento">
+                        <i class="bi-door-closed"></i>
+                        Validar
+                    </a>
                     <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Id">
                         <i class="bi-pencil"></i>
                         Editar

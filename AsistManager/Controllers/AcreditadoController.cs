@@ -84,6 +84,10 @@ namespace AsistManager.Controllers
         {
             if (string.IsNullOrEmpty(dni))
             {
+                //Mostrar mensaje de alerta si el acreditado no existe
+                TempData["AlertaTipo"] = "warning";
+                TempData["AlertaMensaje"] = $"Debe digitar/escanear un DNI.";
+
                 return RedirectToAction(nameof(Index), new { id = id });
             }
 
@@ -99,14 +103,16 @@ namespace AsistManager.Controllers
                 return RedirectToAction(nameof(Index), new { id = id });
             }
 
-            //Buscar ingreso para este acreditado
+            //Buscar ingreso y egreso para este acreditado (si existe)
             var ingreso = _context.Ingresos.FirstOrDefault(i => i.IdAcreditado == acreditado.Id);
+            var egreso = _context.Egresos.FirstOrDefault(i => i.IdAcreditado == acreditado.Id);
 
             //Pasar el acreditado y el registro de ingreso a la vista Search
             var model = new AcreditadoSearchViewModel
             {
                 Acreditado = acreditado,
-                Ingreso = ingreso
+                Ingreso = ingreso,
+                Egreso = egreso
             };
 
             return View(model);
@@ -249,11 +255,13 @@ namespace AsistManager.Controllers
 
             if (acreditado != null)
             {
+                var fecha = DateTime.Now;
+
                 //Crear ingreso
                 var ingreso = new Ingreso()
                 {
                     IdAcreditado = id,
-                    FechaOperacion = DateTime.Now,
+                    FechaOperacion = fecha,
                 };
 
                 //Guardar cambios en la base de datos
@@ -262,9 +270,45 @@ namespace AsistManager.Controllers
 
                 //Redirecciono al Index y muestro alerta
                 TempData["AlertaTipo"] = "success";
-                TempData["AlertaMensaje"] = $"Se registró el ingreso del registro <b>{acreditado.Dni}</b> exitosamente. ({DateTime.Now}).";
+                TempData["AlertaMensaje"] = $"Se registró el ingreso del registro <b>{acreditado.Dni}</b> exitosamente ({fecha}).";
 
                 return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Exit(int id)
+        {
+            var acreditado = _context.Acreditados.Find(id);
+
+            if (acreditado != null)
+            {
+                var fecha = DateTime.Now;
+                var ingreso = _context.Ingresos.ElementAt(0);
+
+                if (ingreso != null)
+                {
+                    //Crear egreso
+                    var egreso = new Egreso()
+                    {
+                        IdAcreditado = id,
+                        IdIngreso = ingreso.Id,
+                        FechaOperacion = fecha,
+                    };
+
+                    //Guardar cambios en la base de datos
+                    _context.Egresos.Add(egreso);
+                    await _context.SaveChangesAsync();
+
+                    //Redirecciono al Index y muestro alerta
+                    TempData["AlertaTipo"] = "success";
+                    TempData["AlertaMensaje"] = $"Se registró el egreso del registro <b>{acreditado.Dni}</b> exitosamente ({fecha}).";
+
+                    return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
+                }
             }
 
             return NotFound();
