@@ -25,19 +25,19 @@
                 <form method="post" enctype="multipart/form-data">
                     <div class="d-flex flex-row justify-content-around my-2">
 
-                        <!--Insertar archivo Excel para su lectura-->
-                        <label class="btn btn-outline-dark btn-lg">
-                            <input id="fileInput" type="file" name="file" onchange="alCargarArchivo()">
-                            Importar archivo
-                            <i class="bi bi-file-arrow-down"></i>
-                        </label>
-
                         <!--Exportar plantilla de Excel para su modificación-->
                         <button id="exportButton" type="submit" asp-controller="Evento" asp-action="Export"
                                 class="btn btn-outline-dark btn-lg">
                             Exportar plantilla
                             <i class="bi bi-filetype-xls"></i>
                         </button>
+
+                        <!--Insertar archivo Excel para su lectura-->
+                        <label class="btn btn-outline-dark btn-lg">
+                            <input id="fileInput" type="file" name="file" onchange="alCargarArchivo()">
+                            Importar archivo
+                            <i class="bi bi-file-arrow-down"></i>
+                        </label>
 
                         <!--Previsualizar registros del archivo importado-->
                         <button id="showButton" type="submit" asp-controller="Evento" asp-action="Import"

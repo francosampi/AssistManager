@@ -35,6 +35,21 @@ namespace AsistManager.Controllers
                 return NotFound();
             }
 
+            //Traer informacion de la base para generar el Chart
+            var acreditados = _context.Acreditados;
+
+            var chartRegistros = acreditados.Where(i => i.IdEvento == id).Count();
+            var chartHabilitados = acreditados.Where(i => i.IdEvento == id && i.Habilitado == true).Count();
+            var chartNoHabilitados = acreditados.Where(i => i.IdEvento == id && i.Habilitado == false).Count();
+            var chartIngreso = acreditados.Where(i => i.IdEvento == id && i.Ingresos != null).Count();
+            var chartEgreso = acreditados.Where(i => i.IdEvento == id && i.Egresos != null).Count();
+
+            ViewData["ChartRegistros"] = chartRegistros;
+            ViewData["ChartHabilitados"] = chartHabilitados;
+            ViewData["ChartNoHabilitados"] = chartNoHabilitados;
+            ViewData["ChartIngreso"] = chartIngreso;
+            ViewData["ChartEgreso"] = chartEgreso;
+
             return View(evento);
         }
 
@@ -234,7 +249,7 @@ namespace AsistManager.Controllers
 
                             do
                             {
-                                //Cargar cada registro en la base, sin leer el encabezado
+                                //Leer cada registro, excepto el encabezado
                                 while (reader.Read())
                                 {
                                     if (!flagHeader)
@@ -264,7 +279,7 @@ namespace AsistManager.Controllers
                                 }
                             } while (reader.NextResult());
 
-                            //Informar lo acontecido (registros leídos y alertas por igual)
+                            //Informar lo acontecido (registros leídos y alertas)
                             string mensajeRegistros = "Se han leído los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
                             string mensajeAlerta = contadorAlertas>0 ? "Hay <b>" +contadorAlertas + " alerta(s)</b>." : "";
 
@@ -326,12 +341,11 @@ namespace AsistManager.Controllers
                         using (var reader = ExcelReaderFactory.CreateReader(stream))
                         {
                             int contadorRegistros = 0;
-                            int contadorAlertas = 0;
                             bool flagHeader = false;
 
                             do
                             {
-                                //Cargar cada registro en la base, sin leer el encabezado
+                                //Leer cada registro en la base, excepto el encabezado
                                 while (reader.Read())
                                 {
                                     if (!flagHeader)
@@ -351,21 +365,17 @@ namespace AsistManager.Controllers
                                     acreditado.Celular = reader.GetValue(5)?.ToString();
                                     acreditado.Grupo = reader.GetValue(6)?.ToString();
 
-                                    if (acreditado.Dni == null)
-                                    {
-                                        contadorAlertas++;
-                                    }
-
+                                    //Insertar registro en la base
                                     _context.Acreditados.Add(acreditado);
                                     contadorRegistros++;
                                 }
                             } while (reader.NextResult());
 
+                            //Guardar cambios en la base
                             await _context.SaveChangesAsync();
 
-                            //Informar lo acontecido (registros leídos y alertas por igual)
-                            string mensajeRegistros = "Se han leído los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
-                            string mensajeAlerta = contadorAlertas > 0 ? "Hay <b>" + contadorAlertas + " alerta(s)</b>." : "";
+                            //Informar lo acontecido (registros insertado y alertas)
+                            string mensajeRegistros = "Se han insertado los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
 
                             if (contadorRegistros == 0)
                             {
@@ -374,7 +384,7 @@ namespace AsistManager.Controllers
                             }
 
                             ViewData["Registros"] = registros;
-                            TempData["AlertaMensaje"] = mensajeRegistros + mensajeAlerta;
+                            TempData["AlertaMensaje"] = mensajeRegistros;
                         }
                     }
                     catch (Exception ex)

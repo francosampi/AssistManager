@@ -1,7 +1,12 @@
 ﻿@model Evento
 
+@{
+
+}
+
 <head>
     <link rel="stylesheet" href="~/css/botones.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <h3>Configurar Evento <label class="text-muted">@Model.Nombre <i>(@Model.FechaInicio)</i></label></h3>
@@ -46,5 +51,59 @@
                 </span>
             </a>
         </div>
+
+        <!--Chart sobre el evento-->
+        <canvas class="m-3" id="chartAcreditados" width="60" height="20"></canvas>
     </div>
 </fieldset>
+
+<script>
+    //Graficar chart con información del evento
+    var ctx = document.getElementById('chartAcreditados').getContext('2d');
+    var chartAcreditados = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Registros en base', 'Habilitados', 'No Habilitados', 'Ingresos', 'Egresos'],
+            datasets: [{
+                responsive: true,
+                label: 'Registros',
+                data: [
+                    @ViewBag.ChartRegistros,
+                    @ViewBag.ChartHabilitados,
+                    @ViewBag.ChartNoHabilitados,
+                    @ViewBag.ChartIngreso,
+                    @ViewBag.ChartEgreso,
+                ],
+                backgroundColor: [
+                    'rgba(152, 172, 255, 1)',
+                    'rgba(152, 255, 171, 1)',
+                    'rgba(255, 160, 152, 1)',
+                    'rgba(255, 249, 152, 1)',
+                    'rgba(131, 131, 131, 1)',
+                ],
+                borderColor: [
+                    'rgba(0, 0, 0, 1)',
+                    'rgba(0, 0, 0, 1)',
+                    'rgba(0, 0, 0, 1)',
+                    'rgba(0, 0, 0, 1)',
+                    'rgba(0, 0, 0, 1)',
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
