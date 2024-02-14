@@ -19,6 +19,8 @@ public partial class AsistManagerContext : DbContext
 
     public virtual DbSet<Evento> Eventos { get; set; }
 
+    public virtual DbSet<Ingreso> Ingresos { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Acreditado>(entity =>
@@ -67,6 +69,26 @@ public partial class AsistManagerContext : DbContext
             entity.Property(e => e.Nombre)
                 .HasMaxLength(255)
                 .HasColumnName("nombre");
+        });
+
+        modelBuilder.Entity<Ingreso>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ingreso__3213E83F53D6BF73");
+
+            entity.ToTable("ingreso");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.FechaOperacion)
+                .HasColumnType("datetime")
+                .HasColumnName("fecha_operacion");
+            entity.Property(e => e.IdAcreditado).HasColumnName("id_acreditado");
+
+            entity.HasOne(d => d.IdAcreditadoNavigation).WithMany(p => p.Ingresos)
+                .HasForeignKey(d => d.IdAcreditado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ingreso__id_acre__49C3F6B7");
         });
 
         OnModelCreatingPartial(modelBuilder);

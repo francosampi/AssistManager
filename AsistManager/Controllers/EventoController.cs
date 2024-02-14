@@ -65,7 +65,7 @@ namespace AsistManager.Controllers
                 await _context.SaveChangesAsync();
 
                 //Redirecciono al Index y muestro alerta
-                TempData["AlertaMensaje"] = "El evento '" + model.Nombre + "' se agregó exitosamente.";
+                TempData["AlertaMensaje"] = "El evento '<b>" + model.Nombre + "</b>' se agregó exitosamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -110,7 +110,7 @@ namespace AsistManager.Controllers
                     _context.SaveChanges();
 
                     //Redirecciono al Index del controlador y muestro alerta
-                    TempData["AlertaMensaje"] = "El evento '" + model.Nombre + "' se modificó exitosamente.";
+                    TempData["AlertaMensaje"] = "El evento '<b>" + model.Nombre + "</b>' se modificó exitosamente.";
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -169,7 +169,7 @@ namespace AsistManager.Controllers
                 _context.SaveChanges();
 
                 //Redireccionar al Index y mostrar alerta
-                TempData["AlertaMensaje"] = $"El evento '{evento.Nombre}' y sus {cantidadAcreditados} acreditados se eliminaron exitosamente.";
+                TempData["AlertaMensaje"] = $"El evento '<b>{evento.Nombre}</b>' y sus <b>{cantidadAcreditados}</b> acreditados se eliminaron exitosamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -265,8 +265,8 @@ namespace AsistManager.Controllers
                             } while (reader.NextResult());
 
                             //Informar lo acontecido (registros leídos y alertas por igual)
-                            string mensajeRegistros = "Se han leído los " + contadorRegistros + " registro(s) correctamente. ";
-                            string mensajeAlerta = contadorAlertas>0 ? "Hay " +contadorAlertas+" alerta(s)." : "";
+                            string mensajeRegistros = "Se han leído los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
+                            string mensajeAlerta = contadorAlertas>0 ? "Hay <b>" +contadorAlertas + " alerta(s)</b>." : "";
 
                             if (contadorRegistros == 0)
                             {

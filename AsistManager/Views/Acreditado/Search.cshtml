@@ -1,0 +1,102 @@
+﻿@using AsistManager.Models.ViewModels
+@model AcreditadoSearchViewModel
+
+<head>
+    <link rel="stylesheet" href="~/css/botones.css" />
+</head>
+
+<!--Muestro detalles del acreditado que se buscó-->
+<div class="card shadow">
+    <div class="card-header">
+        <partial name="_BotonAtras" />
+    </div>
+
+    <div class="card-body">
+        <h3>Resultado de la búsqueda:</h3>
+
+        <!--Detalles del acreditado-->
+        <div class="card-body shadow-sm m-3">
+            <p><strong>Nombre:</strong> @Model.Acreditado.Nombre</p>
+            <p><strong>Apellido:</strong> @Model.Acreditado.Apellido</p>
+            <p><strong>DNI:</strong> @Model.Acreditado.Dni</p>
+            <p><strong>Celular:</strong> @Model.Acreditado.Celular</p>
+            <p><strong>CUIT:</strong> @Model.Acreditado.Cuit</p>
+            <p><strong>Grupo:</strong> @Model.Acreditado.Grupo</p>
+        </div>
+
+        <div class="my-4">
+            <!--Verificar si está habilitado e informar-->
+            <h5>
+                @if (Model.Acreditado.Habilitado == true)
+                {
+                    <strong class="text-success">
+                        <i class="bi-check"></i>
+                        Está habilitado
+                    </strong>
+                }
+                else
+                {
+                    <strong class="text-danger">
+                        <i class="bi-x"></i>
+                        No está habilitado
+                    </strong>
+                }
+            </h5>
+
+            <!--Verificar si existe ingreso e informar-->
+            <h5>
+                @if (Model.Ingreso != null)
+                {
+                    <strong class="text-success">
+                        <i class="bi-arrow-right"></i>
+                        <i class="bi-check"></i>
+                        Esta persona ingresó a las @Model.Ingreso.FechaOperacion.Hour
+                    </strong>
+                }
+                else
+                {
+                    <strong class="text-danger">
+                        <i class="bi-x"></i>
+                        <i class="bi-door-closed"></i>
+                        Esta persona no ingresó
+                    </strong>
+                }
+            </h5>
+        </div>
+
+        <!--Listado de operaciones-->
+        <div class="card-body row d-flex m-1 justify-content-around">
+            <a class="btn btn-info boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+               asp-controller="Acreditado" asp-action="Index" asp-route-id="@Model.Acreditado.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi-door-open"></i>
+                    Registrar Ingreso
+                </span>
+            </a>
+
+            <a class="btn btn-dark boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+               asp-controller="Acreditado" asp-action="Index" asp-route-id="@Model.Acreditado.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi-door-open"></i>
+                    Registrar Egreso
+                </span>
+            </a>
+
+            <a class="btn btn-warning boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+               asp-controller="Acreditado" asp-action="Update" asp-route-id="@Model.Acreditado.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi-pencil-square"></i>
+                    Editar registro
+                </span>
+            </a>
+
+            <a class="btn btn-danger boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
+               asp-controller="Acreditado" asp-action="Delete" asp-route-id="@Model.Acreditado.Id">
+                <span class="boton-grande-texto">
+                    <i class="bi-trash"></i>
+                    Borrar registro
+                </span>
+            </a>
+        </div>
+    </div>
+</div>

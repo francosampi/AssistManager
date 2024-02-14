@@ -20,11 +20,14 @@
             <!--Sección para buscar por DNI-->
             <div class="my-3 row col-md-3">
                 <h5 class="text-muted">Buscar por DNI</h5>
+
                 <form asp-action="Search" method="get" asp-route-id="@ViewBag.Evento.Id">
                     <div class="input-group">
                         <input type="text" class="form-control" name="dni" placeholder="Ingrese DNI">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-info">Buscar</button>
+                            <button type="submit" class="btn btn-info">
+                                <i class="bi-search"></i>
+                            </button>
                         </div>
                     </div>
                 </form>

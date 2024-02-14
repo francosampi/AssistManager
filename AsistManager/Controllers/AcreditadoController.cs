@@ -69,7 +69,7 @@ namespace AsistManager.Controllers
                 await _context.SaveChangesAsync();
 
                 //Redirecciono al Index y muestro alerta
-                TempData["AlertaMensaje"] = $"El registro '{model.Dni}' se agregó exitosamente.";
+                TempData["AlertaMensaje"] = $"El registro '<b>{model.Dni}</b>' se agregó exitosamente.";
 
                 return RedirectToAction(nameof(Index), new {id = id});
             }
@@ -78,27 +78,36 @@ namespace AsistManager.Controllers
         }
 
         //Buscar un acreditado por DNI (desde el listado)
-        public IActionResult Search(string dni, int id)
+        public IActionResult Search(int id, string dni)
         {
             if (string.IsNullOrEmpty(dni))
             {
                 return RedirectToAction(nameof(Index), new { id = id });
             }
 
-            var acreditado = _context.Acreditados.FirstOrDefault(a => a.Dni == dni);
+            //Encontrar registro que coincida con DNI y Evento
+            var acreditado = _context.Acreditados.FirstOrDefault(a => a.Dni == dni && a.IdEvento == id);
 
             if (acreditado == null)
             {
                 //Mostrar mensaje de alerta si el acreditado no existe
                 TempData["AlertaTipo"] = "danger";
-                TempData["AlertaMensaje"] = $"No se encontró ningún registro con DNI {dni}.";
+                TempData["AlertaMensaje"] = $"No se encontró ningún registro con el DNI:  <b>{dni}</b>.";
 
                 return RedirectToAction(nameof(Index), new { id = id });
             }
 
-            ViewData["Acreditado"] = acreditado.IdEventoNavigation;
+            //Buscar ingreso para este acreditado
+            var ingreso = _context.Ingresos.FirstOrDefault(i => i.IdAcreditado == acreditado.Id);
 
-            return RedirectToAction(nameof(Index), new { id = id });
+            //Pasar el acreditado y el registro de ingreso a la vista Search
+            var model = new AcreditadoSearchViewModel
+            {
+                Acreditado = acreditado,
+                Ingreso = ingreso
+            };
+
+            return View(model);
         }
 
 
@@ -109,7 +118,7 @@ namespace AsistManager.Controllers
                 .Include(a => a.IdEventoNavigation)
                 .FirstOrDefault(a => a.Id == id);
 
-            // Verificar si el acreditado existe y tiene un evento asignado
+            //Verificar si el acreditado existe y tiene un evento asignado
             if (acreditado?.IdEventoNavigation == null)
             {
                 return NotFound();
@@ -157,7 +166,7 @@ namespace AsistManager.Controllers
 
                         //Mostrar mensaje de alerta
                         TempData["AlertaTipo"] = "success";
-                        TempData["AlertaMensaje"] = $"El acreditado '{model.Dni}' se modificó exitosamente.";
+                        TempData["AlertaMensaje"] = $"El registro '<b>{model.Dni}</b>' se modificó exitosamente.";
 
                         //Redireccionar al Index
                         return RedirectToAction(nameof(Index), new {id = acreditado.IdEvento});
@@ -220,7 +229,7 @@ namespace AsistManager.Controllers
                 _context.SaveChanges();
 
                 //Redirecciono al Index y muestro alerta
-                TempData["AlertaMensaje"] = $"El acreditado '{acreditado.Dni}' se eliminó exitosamente.";
+                TempData["AlertaMensaje"] = $"El acreditado '<b>{acreditado.Dni}</b>' se eliminó exitosamente.";
 
                 return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
             }

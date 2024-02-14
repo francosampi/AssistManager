@@ -1,4 +1,4 @@
-﻿<!--Mostrar alerta si se pasa un mensaje y un estilo-->
+﻿<!--Mostrar alerta si se pasa un mensaje-->
 @if (TempData["AlertaMensaje"] != null)
 {
     if (TempData["AlertaTipo"] == null)
@@ -10,7 +10,7 @@
         <div class="alert alert-@TempData["AlertaTipo"] alert-dismissible fade show shadow-sm" role="alert">
             <label>
                 <i class="bi-exclamation-circle p-1"></i>
-                @TempData["AlertaMensaje"]
+                @Html.Raw(TempData["AlertaMensaje"])
             </label>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
