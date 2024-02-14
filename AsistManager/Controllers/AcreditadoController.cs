@@ -14,9 +14,10 @@ namespace AsistManager.Controllers
             _context = context;
         }
 
-        //Traer acreditados del evento (por id) asíncronamente e ir a la vista del listado
+        //Traer acreditados del evento e ir a la vista del listado
         public async Task<IActionResult> Index(int id)
         {
+            //Buscar Acreditado con su Evento asignado
             var evento = _context.Eventos.Find(id);
             var acreditados = _context.Acreditados.Where(a => a.IdEvento == id);
 
@@ -69,6 +70,7 @@ namespace AsistManager.Controllers
                 await _context.SaveChangesAsync();
 
                 //Redirecciono al Index y muestro alerta
+                TempData["AlertaTipo"] = "success";
                 TempData["AlertaMensaje"] = $"El registro '<b>{model.Dni}</b>' se agregó exitosamente.";
 
                 return RedirectToAction(nameof(Index), new {id = id});
@@ -229,12 +231,42 @@ namespace AsistManager.Controllers
                 _context.SaveChanges();
 
                 //Redirecciono al Index y muestro alerta
+                TempData["AlertaTipo"] = "success";
                 TempData["AlertaMensaje"] = $"El acreditado '<b>{acreditado.Dni}</b>' se eliminó exitosamente.";
 
                 return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
             }
 
             //Lanzar error si no existe el acreditado
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Entry(int id)
+        {
+            var acreditado = _context.Acreditados.Find(id);
+
+            if (acreditado != null)
+            {
+                //Crear ingreso
+                var ingreso = new Ingreso()
+                {
+                    IdAcreditado = id,
+                    FechaOperacion = DateTime.Now,
+                };
+
+                //Guardar cambios en la base de datos
+                _context.Ingresos.Add(ingreso);
+                await _context.SaveChangesAsync();
+
+                //Redirecciono al Index y muestro alerta
+                TempData["AlertaTipo"] = "success";
+                TempData["AlertaMensaje"] = $"Se registró el ingreso del registro <b>{acreditado.Dni}</b> exitosamente. ({DateTime.Now}).";
+
+                return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
+            }
+
             return NotFound();
         }
     }

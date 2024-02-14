@@ -17,6 +17,8 @@ public partial class AsistManagerContext : DbContext
 
     public virtual DbSet<Acreditado> Acreditados { get; set; }
 
+    public virtual DbSet<Egreso> Egresos { get; set; }
+
     public virtual DbSet<Evento> Eventos { get; set; }
 
     public virtual DbSet<Ingreso> Ingresos { get; set; }
@@ -56,6 +58,30 @@ public partial class AsistManagerContext : DbContext
                 .HasConstraintName("FK__acreditad__id_ev__45F365D3");
         });
 
+        modelBuilder.Entity<Egreso>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__egreso__3213E83F4C821D79");
+
+            entity.ToTable("egreso");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.FechaOperacion)
+                .HasColumnType("datetime")
+                .HasColumnName("fecha_operacion");
+            entity.Property(e => e.IdAcreditado).HasColumnName("id_acreditado");
+            entity.Property(e => e.IdIngreso).HasColumnName("id_ingreso");
+
+            entity.HasOne(d => d.IdAcreditadoNavigation).WithMany(p => p.Egresos)
+                .HasForeignKey(d => d.IdAcreditado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__egreso__id_acred__534D60F1");
+
+            entity.HasOne(d => d.IdIngresoNavigation).WithMany(p => p.Egresos)
+                .HasForeignKey(d => d.IdIngreso)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__egreso__id_ingre__5441852A");
+        });
+
         modelBuilder.Entity<Evento>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__evento__3213E83F4B52FAD5");
@@ -73,13 +99,11 @@ public partial class AsistManagerContext : DbContext
 
         modelBuilder.Entity<Ingreso>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ingreso__3213E83F53D6BF73");
+            entity.HasKey(e => e.Id).HasName("PK__ingreso__3213E83FDFE0EA72");
 
             entity.ToTable("ingreso");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.FechaOperacion)
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_operacion");
@@ -88,7 +112,7 @@ public partial class AsistManagerContext : DbContext
             entity.HasOne(d => d.IdAcreditadoNavigation).WithMany(p => p.Ingresos)
                 .HasForeignKey(d => d.IdAcreditado)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ingreso__id_acre__49C3F6B7");
+                .HasConstraintName("FK__ingreso__id_acre__5070F446");
         });
 
         OnModelCreatingPartial(modelBuilder);

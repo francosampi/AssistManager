@@ -6,5 +6,7 @@ namespace AsistManager.Models.ViewModels
     {
         public Acreditado Acreditado { get; set; }
         public Ingreso? Ingreso { get; set; }
+
+        public Egreso? Egreso { get; set; }
     }
 }
