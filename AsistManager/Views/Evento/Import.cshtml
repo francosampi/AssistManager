@@ -25,6 +25,8 @@
                 <form method="post" enctype="multipart/form-data">
                     <div class="d-flex flex-row justify-content-around my-2">
 
+                        <input type="hidden" name="id" value="@Model?.Id" />
+
                         <!--Exportar plantilla de Excel para su modificación-->
                         <button id="exportButton" type="submit" asp-controller="Evento" asp-action="Export"
                                 class="btn btn-outline-dark btn-lg">

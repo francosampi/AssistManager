@@ -8,7 +8,9 @@
 <!--Muestro detalles del acreditado que se buscó-->
 <div class="card shadow">
     <div class="card-header">
-        <partial name="_BotonAtras" />
+        <a class="btn btn-secondary my-2" asp-controller="Acreditado" asp-action="Index" asp-route-id="@Model.Acreditado.IdEvento">
+            Atrás
+        </a>
     </div>
 
     <div class="card-body">
@@ -22,26 +24,10 @@
             <p><strong>Celular:</strong> @Model.Acreditado.Celular</p>
             <p><strong>CUIT:</strong> @Model.Acreditado.Cuit</p>
             <p><strong>Grupo:</strong> @Model.Acreditado.Grupo</p>
+            <p><strong>Habilitado:</strong> @Model.Acreditado.Habilitado</p>
         </div>
 
         <div class="my-4">
-            <!--Verificar si está habilitado e informar-->
-            <h5>
-                @if (Model.Acreditado.Habilitado == true)
-                {
-                    <strong class="text-success">
-                        <i class="bi-check"></i>
-                        Está habilitado
-                    </strong>
-                }
-                else
-                {
-                    <strong class="text-danger">
-                        <i class="bi-x"></i>
-                        No está habilitado
-                    </strong>
-                }
-            </h5>
 
             <!--Verificar si existe ingreso e informar-->
             <h5>
@@ -94,7 +80,7 @@
                     <!--Habilitar botón solo si no existe un ingreso-->
                     <button type="submit"
                         class="btn btn-info boton-grande shadow-sm"
-                        disabled="@(Model.Ingreso!=null || Model.Acreditado.Habilitado==true)">
+                        disabled="@(Model.Ingreso!=null || Model.Acreditado.Habilitado==false)">
 
                         <span class="boton-grande-texto">
                             <i class="bi-door-open"></i>

@@ -41,8 +41,9 @@ namespace AsistManager.Controllers
             var chartRegistros = acreditados.Where(i => i.IdEvento == id).Count();
             var chartHabilitados = acreditados.Where(i => i.IdEvento == id && i.Habilitado == true).Count();
             var chartNoHabilitados = acreditados.Where(i => i.IdEvento == id && i.Habilitado == false).Count();
-            var chartIngreso = acreditados.Where(i => i.IdEvento == id && i.Ingresos != null).Count();
-            var chartEgreso = acreditados.Where(i => i.IdEvento == id && i.Egresos != null).Count();
+            var chartIngreso = acreditados.Where(i => i.IdEvento == id && _context.Ingresos.Any(ingreso => ingreso.IdAcreditado == i.Id)).Count();
+            var chartEgreso = acreditados.Where(i => i.IdEvento == id && _context.Egresos.Any(egreso => egreso.IdAcreditado == i.Id)).Count();
+
 
             ViewData["ChartRegistros"] = chartRegistros;
             ViewData["ChartHabilitados"] = chartHabilitados;
@@ -159,27 +160,31 @@ namespace AsistManager.Controllers
         //Borrar el Evento
         public IActionResult Delete(int id, int a)
         {
+            //Hago Select del Evento e incluyo en la consulta tanto sus acreditados como sus ingresos y egresos
             var evento = _context.Eventos
                 .Include(e => e.Acreditados)
+                    .ThenInclude(a => a.Ingresos)
+                .Include(e => e.Acreditados)
+                    .ThenInclude(a=> a.Egresos)
                 .FirstOrDefault(e => e.Id == id);
 
             //Verificar que el evento existe
             if (evento != null)
             {
-                //Obtener los acreditados del evento
-                var acreditados = evento.Acreditados.ToList();
-                int cantidadAcreditados = acreditados.Count();
+                //Obtener los acreditados del evento y la cantidad a borrar
+                var acreditados = evento.Acreditados;
+                int cantidadAcreditados = acreditados.ToList().Count();
 
-                //Eliminar los acreditados del evento
+                //Eliminar los ingresos y egresos del acreditado
                 foreach (var acreditado in acreditados)
                 {
-                    _context.Acreditados.Remove(acreditado);
+                    _context.Ingresos.RemoveRange(acreditado.Ingresos);
+                    _context.Egresos.RemoveRange(acreditado.Egresos);
                 }
 
-                // Guardar cambios en la base de datos
-                _context.SaveChanges();
+                _context.Acreditados.RemoveRange(acreditados);
 
-                //Una vez eliminados los acreditados, elimino el evento
+                //Una vez eliminados los acreditados, ingresos y egresos, elimino el evento
                 _context.Eventos.Remove(evento);
                 _context.SaveChanges();
 
@@ -308,7 +313,7 @@ namespace AsistManager.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //Subir el excel de la base
-        public async Task<IActionResult> Insert(IFormFile file)
+        public async Task<IActionResult> Insert(int id, IFormFile file)
         {
             //Manejo de la codificación de caracteres específicos durante la lectura del archivo
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -364,6 +369,9 @@ namespace AsistManager.Controllers
                                     acreditado.Habilitado = Convert.ToBoolean(reader.GetValue(4)?.ToString());
                                     acreditado.Celular = reader.GetValue(5)?.ToString();
                                     acreditado.Grupo = reader.GetValue(6)?.ToString();
+
+                                    //Asigno el ID del Evento correspondiente
+                                    acreditado.IdEvento = id;
 
                                     //Insertar registro en la base
                                     _context.Acreditados.Add(acreditado);

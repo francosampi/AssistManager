@@ -10,6 +10,8 @@
             <th>Habilitado</th>
             <th>Celular</th>
             <th>Grupo</th>
+            <th>Ingreso</th>
+            <th>Egreso</th>
             <th></th>
         </tr>
     </thead>
@@ -19,19 +21,21 @@
         @foreach (var registro in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(m => registro.Nombre)</td>
-                <td>@Html.DisplayFor(m => registro.Apellido)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Nombre)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Apellido)</td>
                 <td>@Html.DisplayFor(m => registro.Dni)</td>
                 <td>@Html.DisplayFor(m => registro.Cuit)</td>
                 <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
                 <td>@Html.DisplayFor(m => registro.Celular)</td>
                 <td>@Html.DisplayFor(m => registro.Grupo)</td>
+                <td>@Html.DisplayFor(m => registro.Ingresos)</td>
+                <td>@Html.DisplayFor(m => registro.Egresos)</td>
 
                 <!--Operaciones disponibles-->
-                <td class="text-end">
+                <td class="d-flex">
                     <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.IdEvento" asp-route-dni="@registro.Dni">
                         <i class="bi-list-check"></i>
-                        Validar
+                        Detalle
                     </a>
                     <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Id">
                         <i class="bi-pencil"></i>
@@ -46,3 +50,11 @@
         }
     </tbody>
 </table>
+
+<style>
+    .rowCampo{
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>

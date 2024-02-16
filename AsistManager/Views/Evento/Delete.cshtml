@@ -1,7 +1,7 @@
 ﻿@model Evento
 
 <h1>
-    Borrar evento
+    Borrar evento <label class="text-muted">@Model.Nombre <i>(@Model.FechaInicio)</i></label>
 </h1>
 
 <fieldset class="mt-4">
@@ -14,7 +14,7 @@
             <!--Form para borrar el evento seleccionado-->
             <form asp-action="Delete" method="post">
 
-                <p class="fw-bold">¿Borrar el evento <label class="text-muted">@Model.Nombre<i>(@Model.FechaInicio)</i></label> junto con sus registros?</p>
+                <p class="fw-bold">Se borrarán tanto los registros como sus ingresos y egresos.</p>
 
                 <!--Botones para borrar evento o ir atrás-->
                 <div class="form-group mt-3 d-flex flex-row justify-content-between">

@@ -9,7 +9,9 @@
 
     <div class="card shadow">
         <div class="card-header">
-            <partial name="_BotonAtras" />
+            <a class="btn btn-secondary my-2" asp-controller="Evento" asp-action="Menu" asp-route-id="@ViewBag.Evento.Id">
+                Atrás
+            </a>
 
             <!--Botón para agregar nuevo acreditado-->
             <a class="btn btn-primary" asp-action="Create" asp-route-id="@ViewBag.Evento.Id">

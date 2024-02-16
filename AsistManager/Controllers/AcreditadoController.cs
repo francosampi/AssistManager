@@ -86,7 +86,7 @@ namespace AsistManager.Controllers
             {
                 //Mostrar mensaje de alerta si el acreditado no existe
                 TempData["AlertaTipo"] = "warning";
-                TempData["AlertaMensaje"] = $"Debe digitar/escanear un DNI.";
+                TempData["AlertaMensaje"] = $"No se encontró el DNI.";
 
                 return RedirectToAction(nameof(Index), new { id = id });
             }

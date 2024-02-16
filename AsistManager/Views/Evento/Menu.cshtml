@@ -1,9 +1,5 @@
 ﻿@model Evento
 
-@{
-
-}
-
 <head>
     <link rel="stylesheet" href="~/css/botones.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,7 +11,9 @@
 <fieldset class="mt-4">
     <div class="card shadow">
         <div class="card-header">
-            <partial name="_BotonAtras" />
+            <a class="btn btn-secondary my-2" asp-controller="Evento" asp-action="Index">
+                Atrás
+            </a>
         </div>
 
         <div class="card-body row d-flex m-3 justify-content-around">
@@ -53,7 +51,7 @@
         </div>
 
         <!--Chart sobre el evento-->
-        <canvas class="m-3" id="chartAcreditados" width="60" height="20"></canvas>
+        <canvas class="m-3" id="chartAcreditados" width="60" height="30"></canvas>
     </div>
 </fieldset>
 
@@ -63,14 +61,12 @@
     var chartAcreditados = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Registros en base', 'Habilitados', 'No Habilitados', 'Ingresos', 'Egresos'],
+            labels: ['Registros en base', 'Ingresos', 'Egresos'],
             datasets: [{
                 responsive: true,
                 label: 'Registros',
                 data: [
                     @ViewBag.ChartRegistros,
-                    @ViewBag.ChartHabilitados,
-                    @ViewBag.ChartNoHabilitados,
                     @ViewBag.ChartIngreso,
                     @ViewBag.ChartEgreso,
                 ],
@@ -78,15 +74,6 @@
                     'rgba(152, 172, 255, 1)',
                     'rgba(152, 255, 171, 1)',
                     'rgba(255, 160, 152, 1)',
-                    'rgba(255, 249, 152, 1)',
-                    'rgba(131, 131, 131, 1)',
-                ],
-                borderColor: [
-                    'rgba(0, 0, 0, 1)',
-                    'rgba(0, 0, 0, 1)',
-                    'rgba(0, 0, 0, 1)',
-                    'rgba(0, 0, 0, 1)',
-                    'rgba(0, 0, 0, 1)',
                 ],
                 borderWidth: 1,
             }]
