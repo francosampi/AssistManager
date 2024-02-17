@@ -2,6 +2,7 @@
 using AsistManager.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace AsistManager.Controllers
 {
@@ -29,6 +30,21 @@ namespace AsistManager.Controllers
                 });
 
             ViewData["Evento"] = evento;
+
+            //Si existe una búsqueda por filtro, devolver esa lista
+            if (TempData["Filtro"] != null)
+            {
+                var filtro = TempData["Filtro"] as string;
+
+                var resultados = acreditados.Where(vm => vm.Acreditado.Nombre.ToLower().Contains(filtro) ||
+                                                          vm.Acreditado.Apellido.ToLower().Contains(filtro) ||
+                                                          vm.Acreditado.Dni.ToLower().Contains(filtro) ||
+                                                          vm.Acreditado.Cuit.ToLower().Contains(filtro) ||
+                                                          vm.Acreditado.Celular.ToLower().Contains(filtro) ||
+                                                          vm.Acreditado.Grupo.ToLower().Contains(filtro));
+
+                return View(resultados.ToList());
+            }
 
             return View(await acreditados.ToListAsync());
         }
@@ -87,18 +103,24 @@ namespace AsistManager.Controllers
             return View(model);
         }
 
-        //Buscar un acreditado por DNI (desde el listado)
-        public IActionResult Search(int id, string dni)
+        public async Task<IActionResult> Filter(int id, string filtro)
         {
-            if (string.IsNullOrEmpty(dni))
+            if (string.IsNullOrEmpty(filtro))
             {
                 //Mostrar mensaje de alerta si el acreditado no existe
                 TempData["AlertaTipo"] = "warning";
-                TempData["AlertaMensaje"] = $"No se encontró el DNI.";
+                TempData["AlertaMensaje"] = $"El filtro de búsqueda está vacío.";
 
                 return RedirectToAction(nameof(Index), new { id = id });
             }
 
+            TempData["Filtro"] = filtro;
+            return RedirectToAction(nameof(Index), new { id = id });
+        }
+
+        //Buscar un acreditado por DNI (desde el listado)
+        public IActionResult Search(int id, string dni)
+        {
             //Encontrar registro que coincida con DNI y Evento
             var acreditado = _context.Acreditados.FirstOrDefault(a => a.Dni == dni && a.IdEvento == id);
 
