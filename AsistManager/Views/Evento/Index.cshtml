@@ -1,5 +1,9 @@
 ﻿@model List<Evento>
 
+<head>
+    <link rel="stylesheet" href="~/css/tablaEventos.css" />
+</head>
+
 <h3>Listado de eventos</h3>
 
 <fieldset class="mt-4">
@@ -30,30 +34,26 @@
             }
 
             <!--Tabla de eventos con sus operaciones disponibles-->
-            <table class="table table-hover table-responsive mt-3">
+            <table class="table table-responsive mt-3">
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Fecha de Inicio</th>
-                        <th></th>
+                        <th>Hora de Inicio</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!--Recorrer los registros del Modelo-->
                     @foreach (var evento in Model)
                     {
-                        <tr>
+                        <tr class="table-row shadow-sm py-4 my-2" onclick="location.href='@Url.Action("Menu", new { id = evento.Id })'">
                             <td>
                                 @Html.DisplayFor(m => evento.Nombre)
                             </td>
                             <td>
-                                @Html.DisplayFor(m => evento.FechaInicio)
+                                @evento.FechaInicio.ToString("yyyy-MM-dd")
                             </td>
-                            <td class="text-end">
-                                <a class="btn btn-info" asp-action="Menu" asp-route-id="@evento.Id">
-                                    <i class="bi bi-gear"></i>
-                                    Configurar
-                                </a>
+                            <td>
+                                @evento.FechaInicio.ToString("HH:mm:ss")
                             </td>
                         </tr>
                     }
