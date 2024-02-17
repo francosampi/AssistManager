@@ -20,7 +20,13 @@ namespace AsistManager.Controllers
             //Buscar Acreditado con su Evento asignado
             var evento = _context.Eventos.Find(id);
             var acreditados = _context.Acreditados
-                .Where(a => a.IdEvento == id);
+                .Where(a => a.IdEvento == id)
+                .Select(a => new AcreditadoSearchViewModel
+                {
+                    Acreditado = a,
+                    Ingreso = a.Ingresos.FirstOrDefault(),
+                    Egreso = a.Egresos.FirstOrDefault(),
+                });
 
             ViewData["Evento"] = evento;
 
@@ -53,7 +59,7 @@ namespace AsistManager.Controllers
                 //Asigno el id del Evento correspondiente
                 model.IdEvento = id;
 
-                //Creo instancia de la clase Acreditado y cargo los datos del ViewModel
+                //Creo instancia y cargo los datos del ViewModel
                 var acreditado = new Acreditado()
                 {
                     IdEvento = model.IdEvento,
@@ -134,6 +140,7 @@ namespace AsistManager.Controllers
                 return NotFound();
             }
 
+            //Creo instancia y cargo los datos del ViewModel
             AcreditadoViewModel acreditadoView = new AcreditadoViewModel()
             {
                 Nombre = acreditado.Nombre,
@@ -236,6 +243,10 @@ namespace AsistManager.Controllers
             //Verificar si el acreditado existe
             if (acreditado != null)
             {
+                //Eliminar los ingresos y egresos del acreditado
+                _context.Ingresos.RemoveRange(acreditado.Ingresos);
+                _context.Egresos.RemoveRange(acreditado.Egresos);
+
                 //Borrar acreditado
                 _context.Acreditados.Remove(acreditado);
 
@@ -293,27 +304,23 @@ namespace AsistManager.Controllers
             if (acreditado != null)
             {
                 var fecha = DateTime.Now;
-                var ingreso = _context.Ingresos.ElementAt(0);
 
-                if (ingreso != null)
+                //Crear egreso
+                var egreso = new Egreso()
                 {
-                    //Crear egreso
-                    var egreso = new Egreso()
-                    {
-                        IdAcreditado = id,
-                        FechaOperacion = fecha,
-                    };
+                    IdAcreditado = id,
+                    FechaOperacion = fecha,
+                };
 
-                    //Guardar cambios en la base de datos
-                    _context.Egresos.Add(egreso);
-                    await _context.SaveChangesAsync();
+                //Guardar cambios en la base de datos
+                _context.Egresos.Add(egreso);
+                await _context.SaveChangesAsync();
 
-                    //Redirecciono al Index y muestro alerta
-                    TempData["AlertaTipo"] = "success";
-                    TempData["AlertaMensaje"] = $"Se registró el egreso del registro <b>{acreditado.Dni}</b> exitosamente ({fecha}).";
+                //Redirecciono al Index y muestro alerta
+                TempData["AlertaTipo"] = "success";
+                TempData["AlertaMensaje"] = $"Se registró el egreso del registro <b>{acreditado.Dni}</b> exitosamente ({fecha}).";
 
-                    return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
-                }
+                return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
             }
 
             return NotFound();

@@ -1,4 +1,5 @@
-﻿@model List<Acreditado>
+﻿@using AsistManager.Models.ViewModels
+@model List<AcreditadoSearchViewModel>
 
 <head>
     <link rel="stylesheet" href="~/css/tablaRegistros.css" />
@@ -26,26 +27,29 @@
         @foreach (var registro in Model)
         {
             <tr>
-                <td class="rowCampo">@Html.DisplayFor(m => registro.Nombre)</td>
-                <td class="rowCampo">@Html.DisplayFor(m => registro.Apellido)</td>
-                <td>@Html.DisplayFor(m => registro.Dni)</td>
-                <td>@Html.DisplayFor(m => registro.Cuit)</td>
-                <td>@Html.DisplayFor(m => registro.Celular)</td>
-                <td>@Html.DisplayFor(m => registro.Grupo)</td>
-                <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
-                <td>@(registro.Alta.HasValue ? (registro.Alta.Value ? "Sí" : "No") : "N/D")</td>
-                <td>@Html.DisplayFor(m => registro.Ingresos)</td>
-                <td>@Html.DisplayFor(m => registro.Egresos)</td>
+                <!--Informar datos del acreditado-->
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Nombre)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Apellido)</td>
+                <td>@Html.DisplayFor(m => registro.Acreditado.Dni)</td>
+                <td>@Html.DisplayFor(m => registro.Acreditado.Cuit)</td>
+                <td>@Html.DisplayFor(m => registro.Acreditado.Celular)</td>
+                <td>@Html.DisplayFor(m => registro.Acreditado.Grupo)</td>
+                <td>@(registro.Acreditado.Habilitado.HasValue ? (registro.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
+                <td>@(registro.Acreditado.Alta.HasValue ? (registro.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</td>
+
+                <!--Informar hora de ingreso y egreso-->
+                <td>@Html.DisplayFor(m => registro.Ingreso.FechaOperacion)</td>
+                <td>@Html.DisplayFor(m => registro.Egreso.FechaOperacion)</td>
 
                 <!--Operaciones disponibles-->
                 <td class="d-flex justify-content-around">
-                    <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.IdEvento" asp-route-dni="@registro.Dni">
+                    <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.Acreditado.IdEvento" asp-route-dni="@registro.Acreditado.Dni">
                         <i class="bi-list-check"></i>
                     </a>
-                    <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Id">
+                    <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Acreditado.Id">
                         <i class="bi-pencil"></i>
                     </a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@registro.Id">
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@registro.Acreditado.Id">
                         <i class="bi-trash"></i>
                     </a>
                 </td>
