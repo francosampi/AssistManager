@@ -63,7 +63,8 @@ namespace AsistManager.Controllers
                     Celular = model.Celular,
                     Cuit = model.Cuit,
                     Grupo = model.Grupo,
-                    Habilitado = true,
+                    Habilitado = model.Habilitado,
+                    Alta = model.Alta,
                 };
 
                 //Agrego y guardo los cambios en la base de datos
@@ -141,6 +142,8 @@ namespace AsistManager.Controllers
                 Cuit = acreditado.Cuit,
                 Dni = acreditado.Dni,
                 Grupo = acreditado.Grupo,
+                Habilitado = acreditado.Habilitado,
+                Alta = acreditado.Alta,
             };
 
             ViewData["Evento"] = acreditado.IdEventoNavigation;
@@ -169,6 +172,8 @@ namespace AsistManager.Controllers
                         acreditado.Cuit = model.Cuit;
                         acreditado.Celular = model.Celular;
                         acreditado.Grupo = model.Grupo;
+                        acreditado.Habilitado = model.Habilitado;
+                        acreditado.Alta = model.Alta;
 
                         //Guardar cambios en la base de datos
                         _context.SaveChanges();

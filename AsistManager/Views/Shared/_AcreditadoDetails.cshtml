@@ -1,2 +1,14 @@
-﻿@model Acreditado
+﻿@using AsistManager.Models.ViewModels
+@model AcreditadoSearchViewModel
 
+<!--Detalles del acreditado-->
+<div class="card-body shadow-sm m-3">
+    <p><strong>Nombre:</strong> @(Model.Acreditado.Nombre ?? "-")</p>
+    <p><strong>Apellido:</strong> @(Model.Acreditado.Apellido ?? "-")</p>
+    <p><strong>DNI:</strong> @(Model.Acreditado.Dni ?? "-")</p>
+    <p><strong>Celular:</strong> @(Model.Acreditado.Celular ?? "-")</p>
+    <p><strong>CUIT:</strong> @(Model.Acreditado.Cuit ?? "-")</p>
+    <p><strong>Grupo:</strong> @(Model.Acreditado.Grupo ?? "-")</p>
+    <p><strong>Habilitado:</strong> @(Model.Acreditado.Habilitado.HasValue ? (Model.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</p>
+    <p><strong>Alta:</strong> @(Model.Acreditado.Alta.HasValue ? (Model.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</p>
+</div>

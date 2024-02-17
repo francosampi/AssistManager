@@ -23,5 +23,9 @@ namespace AsistManager.Models.ViewModels
         public string? Celular { get; set; }
 
         public string? Grupo { get; set; }
+
+        public bool? Habilitado { get; set; }
+
+        public bool? Alta { get; set; }
     }
 }

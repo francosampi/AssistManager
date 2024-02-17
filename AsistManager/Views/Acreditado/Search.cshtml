@@ -16,17 +16,7 @@
     <div class="card-body shadow-sm">
         <h3>Resultado de la búsqueda:</h3>
 
-        <!--Detalles del acreditado-->
-        <div class="card-body shadow-sm m-3">
-            <p><strong>Nombre:</strong> @Model.Acreditado.Nombre</p>
-            <p><strong>Apellido:</strong> @Model.Acreditado.Apellido</p>
-            <p><strong>DNI:</strong> @Model.Acreditado.Dni</p>
-            <p><strong>Celular:</strong> @Model.Acreditado.Celular</p>
-            <p><strong>CUIT:</strong> @Model.Acreditado.Cuit</p>
-            <p><strong>Grupo:</strong> @Model.Acreditado.Grupo</p>
-            <p><strong>Habilitado:</strong> @(Model.Acreditado.Habilitado.HasValue ? (Model.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</p>
-            <p><strong>Alta:</strong> @(Model.Acreditado.Alta.HasValue ? (Model.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</p>
-        </div>
+        <partial name="_AcreditadoDetails" model="Model" />
 
         <div class="my-4">
 
@@ -105,25 +95,31 @@
                     </button>
                 </form>
 
-                <div class="d-flex justify-content-center align-items-center col">
-                    <a class="btn btn-warning boton-grande shadow-sm"
-                       asp-controller="Acreditado" asp-action="Update" asp-route-id="@Model.Acreditado.Id">
+                <form asp-action="Update" asp-route-id="@Model.Acreditado.Id" method="get"
+                      class="d-flex justify-content-center align-items-center col">
+
+                    <button type="submit"
+                            class="btn btn-warning boton-grande shadow-sm">
+
                         <span class="boton-grande-texto">
                             <i class="bi-pencil-square"></i>
                             Editar registro
                         </span>
-                    </a>
-                </div>
+                    </button>
+                </form>
 
-                <div class="d-flex justify-content-center align-items-center col">
-                    <a class="btn btn-danger boton-grande shadow-sm"
-                       asp-controller="Acreditado" asp-action="Delete" asp-route-id="@Model.Acreditado.Id">
+                <form asp-action="Delete" asp-route-id="@Model.Acreditado.Id" method="get"
+                      class="d-flex justify-content-center align-items-center col">
+
+                    <button type="submit"
+                            class="btn btn-danger boton-grande shadow-sm">
+
                         <span class="boton-grande-texto">
                             <i class="bi-trash"></i>
                             Borrar registro
                         </span>
-                    </a>
-                </div>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

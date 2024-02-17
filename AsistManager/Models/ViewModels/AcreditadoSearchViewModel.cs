@@ -4,7 +4,7 @@ namespace AsistManager.Models.ViewModels
 {
     public class AcreditadoSearchViewModel
     {
-        public Acreditado Acreditado { get; set; }
+        public Acreditado Acreditado { get; set; } = null!;
 
         public Ingreso? Ingreso { get; set; }
 
