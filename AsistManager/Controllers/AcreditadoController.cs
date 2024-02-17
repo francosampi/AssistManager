@@ -102,20 +102,21 @@ namespace AsistManager.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Filter(int id, string filtro)
+        public IActionResult Filter(int id, string filtro)
         {
             if (string.IsNullOrEmpty(filtro))
             {
-                //Mostrar mensaje de alerta si el acreditado no existe
                 TempData["AlertaTipo"] = "warning";
-                TempData["AlertaMensaje"] = $"El filtro de búsqueda está vacío.";
-
-                return RedirectToAction(nameof(Index), new { id = id });
+                TempData["AlertaMensaje"] = "El filtro de búsqueda está vacío.";
+            }
+            else
+            {
+                TempData["Filtro"] = filtro;
             }
 
-            TempData["Filtro"] = filtro;
             return RedirectToAction(nameof(Index), new { id = id });
         }
+
 
         //Buscar un acreditado por DNI (desde el listado)
         public IActionResult Search(int id, string dni)
