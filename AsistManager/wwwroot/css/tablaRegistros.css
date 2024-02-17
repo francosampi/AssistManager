@@ -1,3 +1,5 @@
-﻿.tabla-registros {
-    height: 80%;
+﻿.rowCampo {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -44,7 +44,6 @@ namespace AsistManager.Controllers
             var chartIngreso = acreditados.Where(i => i.IdEvento == id && _context.Ingresos.Any(ingreso => ingreso.IdAcreditado == i.Id)).Count();
             var chartEgreso = acreditados.Where(i => i.IdEvento == id && _context.Egresos.Any(egreso => egreso.IdAcreditado == i.Id)).Count();
 
-
             ViewData["ChartRegistros"] = chartRegistros;
             ViewData["ChartHabilitados"] = chartHabilitados;
             ViewData["ChartNoHabilitados"] = chartNoHabilitados;
@@ -270,11 +269,12 @@ namespace AsistManager.Controllers
                                     acreditado.Apellido = reader.GetValue(1)?.ToString();
                                     acreditado.Dni = reader.GetValue(2)?.ToString();
                                     acreditado.Cuit = reader.GetValue(3)?.ToString();
-                                    acreditado.Habilitado = Convert.ToBoolean(reader.GetValue(4)?.ToString());
-                                    acreditado.Celular = reader.GetValue(5)?.ToString();
-                                    acreditado.Grupo = reader.GetValue(6)?.ToString();
+                                    acreditado.Celular = reader.GetValue(4)?.ToString();
+                                    acreditado.Grupo = reader.GetValue(5)?.ToString();
+                                    acreditado.Habilitado = Convert.ToBoolean(reader.GetValue(6)?.ToString());
+                                    acreditado.Alta = Convert.ToBoolean(reader.GetValue(7)?.ToString());
 
-                                    if(acreditado.Dni==null)
+                                    if (acreditado.Dni==null)
                                     {
                                         contadorAlertas++;
                                     }
@@ -366,9 +366,10 @@ namespace AsistManager.Controllers
                                     acreditado.Apellido = reader.GetValue(1)?.ToString();
                                     acreditado.Dni = reader.GetValue(2)?.ToString();
                                     acreditado.Cuit = reader.GetValue(3)?.ToString();
-                                    acreditado.Habilitado = Convert.ToBoolean(reader.GetValue(4)?.ToString());
-                                    acreditado.Celular = reader.GetValue(5)?.ToString();
-                                    acreditado.Grupo = reader.GetValue(6)?.ToString();
+                                    acreditado.Celular = reader.GetValue(4)?.ToString();
+                                    acreditado.Grupo = reader.GetValue(5)?.ToString();
+                                    acreditado.Habilitado = Convert.ToBoolean(reader.GetValue(6)?.ToString());
+                                    acreditado.Alta = Convert.ToBoolean(reader.GetValue(7)?.ToString());
 
                                     //Asigno el ID del Evento correspondiente
                                     acreditado.IdEvento = id;

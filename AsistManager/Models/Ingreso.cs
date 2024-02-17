@@ -11,7 +11,5 @@ public partial class Ingreso
 
     public DateTime FechaOperacion { get; set; }
 
-    public virtual ICollection<Egreso> Egresos { get; set; } = new List<Egreso>();
-
     public virtual Acreditado IdAcreditadoNavigation { get; set; } = null!;
 }

@@ -32,6 +32,7 @@ public partial class AsistManagerContext : DbContext
             entity.ToTable("acreditado");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Alta).HasColumnName("alta");
             entity.Property(e => e.Apellido)
                 .HasMaxLength(51)
                 .HasColumnName("apellido");
@@ -60,7 +61,7 @@ public partial class AsistManagerContext : DbContext
 
         modelBuilder.Entity<Egreso>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__egreso__3213E83F4C821D79");
+            entity.HasKey(e => e.Id).HasName("PK__egreso__3213E83F90409F4C");
 
             entity.ToTable("egreso");
 
@@ -69,17 +70,11 @@ public partial class AsistManagerContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_operacion");
             entity.Property(e => e.IdAcreditado).HasColumnName("id_acreditado");
-            entity.Property(e => e.IdIngreso).HasColumnName("id_ingreso");
 
             entity.HasOne(d => d.IdAcreditadoNavigation).WithMany(p => p.Egresos)
                 .HasForeignKey(d => d.IdAcreditado)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__egreso__id_acred__534D60F1");
-
-            entity.HasOne(d => d.IdIngresoNavigation).WithMany(p => p.Egresos)
-                .HasForeignKey(d => d.IdIngreso)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__egreso__id_ingre__5441852A");
+                .HasConstraintName("FK__egreso__id_acred__5CD6CB2B");
         });
 
         modelBuilder.Entity<Evento>(entity =>

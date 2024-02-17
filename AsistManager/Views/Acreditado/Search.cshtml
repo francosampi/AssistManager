@@ -13,7 +13,7 @@
         </a>
     </div>
 
-    <div class="card-body">
+    <div class="card-body shadow-sm">
         <h3>Resultado de la búsqueda:</h3>
 
         <!--Detalles del acreditado-->
@@ -24,7 +24,8 @@
             <p><strong>Celular:</strong> @Model.Acreditado.Celular</p>
             <p><strong>CUIT:</strong> @Model.Acreditado.Cuit</p>
             <p><strong>Grupo:</strong> @Model.Acreditado.Grupo</p>
-            <p><strong>Habilitado:</strong> @Model.Acreditado.Habilitado</p>
+            <p><strong>Habilitado:</strong> @(Model.Acreditado.Habilitado.HasValue ? (Model.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</p>
+            <p><strong>Alta:</strong> @(Model.Acreditado.Alta.HasValue ? (Model.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</p>
         </div>
 
         <div class="my-4">
@@ -80,7 +81,7 @@
                     <!--Habilitar botón solo si no existe un ingreso-->
                     <button type="submit"
                         class="btn btn-info boton-grande shadow-sm"
-                        disabled="@(Model.Ingreso!=null || Model.Acreditado.Habilitado==false)">
+                        disabled="@(Model.Ingreso!=null)">
 
                         <span class="boton-grande-texto">
                             <i class="bi-door-open"></i>

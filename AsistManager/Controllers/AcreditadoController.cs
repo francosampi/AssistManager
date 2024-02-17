@@ -19,7 +19,8 @@ namespace AsistManager.Controllers
         {
             //Buscar Acreditado con su Evento asignado
             var evento = _context.Eventos.Find(id);
-            var acreditados = _context.Acreditados.Where(a => a.IdEvento == id);
+            var acreditados = _context.Acreditados
+                .Where(a => a.IdEvento == id);
 
             ViewData["Evento"] = evento;
 
@@ -295,7 +296,6 @@ namespace AsistManager.Controllers
                     var egreso = new Egreso()
                     {
                         IdAcreditado = id,
-                        IdIngreso = ingreso.Id,
                         FechaOperacion = fecha,
                     };
 

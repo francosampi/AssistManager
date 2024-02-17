@@ -23,6 +23,8 @@ public partial class Acreditado
 
     public string? Grupo { get; set; }
 
+    public bool? Alta { get; set; }
+
     public virtual ICollection<Egreso> Egresos { get; set; } = new List<Egreso>();
 
     public virtual Evento? IdEventoNavigation { get; set; }

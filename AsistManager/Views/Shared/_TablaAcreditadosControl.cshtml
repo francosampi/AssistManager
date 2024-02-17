@@ -1,15 +1,20 @@
 ﻿@model List<Acreditado>
 
-<table class="table table-hover tabla-registros mt-4">
+<head>
+    <link rel="stylesheet" href="~/css/tablaRegistros.css" />
+</head>
+
+<table class="table table-hover table-responsive-lg tabla-registros mt-4">
     <thead>
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>DNI</th>
             <th>CUIT</th>
-            <th>Habilitado</th>
             <th>Celular</th>
             <th>Grupo</th>
+            <th>Habilitado</th>
+            <th>Alta</th>
             <th>Ingreso</th>
             <th>Egreso</th>
             <th></th>
@@ -25,14 +30,15 @@
                 <td class="rowCampo">@Html.DisplayFor(m => registro.Apellido)</td>
                 <td>@Html.DisplayFor(m => registro.Dni)</td>
                 <td>@Html.DisplayFor(m => registro.Cuit)</td>
-                <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
                 <td>@Html.DisplayFor(m => registro.Celular)</td>
                 <td>@Html.DisplayFor(m => registro.Grupo)</td>
+                <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
+                <td>@(registro.Alta.HasValue ? (registro.Alta.Value ? "Sí" : "No") : "N/D")</td>
                 <td>@Html.DisplayFor(m => registro.Ingresos)</td>
                 <td>@Html.DisplayFor(m => registro.Egresos)</td>
 
                 <!--Operaciones disponibles-->
-                <td class="d-flex">
+                <td class="d-flex justify-content-around">
                     <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.IdEvento" asp-route-dni="@registro.Dni">
                         <i class="bi-list-check"></i>
                         Detalle
@@ -50,11 +56,3 @@
         }
     </tbody>
 </table>
-
-<style>
-    .rowCampo{
-        max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-</style>
