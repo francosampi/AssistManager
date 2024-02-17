@@ -22,9 +22,10 @@
                 <td>@Html.DisplayFor(m => registro.Apellido)</td>
                 <td>@Html.DisplayFor(m => registro.Dni)</td>
                 <td>@Html.DisplayFor(m => registro.Cuit)</td>
-                <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
                 <td>@Html.DisplayFor(m => registro.Celular)</td>
                 <td>@Html.DisplayFor(m => registro.Grupo)</td>
+                <td>@(registro.Habilitado.HasValue ? (registro.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
+                <td>@(registro.Alta.HasValue ? (registro.Alta.Value ? "Sí" : "No") : "N/D")</td>
             </tr>
         }
     </tbody>

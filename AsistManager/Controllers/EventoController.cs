@@ -1,8 +1,11 @@
 using AsistManager.Models;
 using AsistManager.Models.ViewModels;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Text;
 
 namespace AsistManager.Controllers
@@ -214,9 +217,11 @@ namespace AsistManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //Subir el excel de la base
-        public async Task<IActionResult> Import(IFormFile file)
+        //Subir el excel de la base y leer registros
+        public async Task<IActionResult> Read(int id, IFormFile file)
         {
+            var evento = _context.Eventos.Find(id);
+
             //Manejo de la codificación de caracteres específicos durante la lectura del archivo
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -307,12 +312,12 @@ namespace AsistManager.Controllers
                 }
             }
 
-            return View();
+            return View(nameof(Import), evento);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //Subir el excel de la base
+        //Subir el excel de la base e insertar registros
         public async Task<IActionResult> Insert(int id, IFormFile file)
         {
             //Manejo de la codificación de caracteres específicos durante la lectura del archivo
@@ -405,7 +410,48 @@ namespace AsistManager.Controllers
                 }
             }
 
-            return View(nameof(Import));
+            return RedirectToAction(nameof(Menu), new {id = id});
+        }
+
+        public FileResult Export(int id)
+        {
+            try
+            {
+                DataTable dataTable = new DataTable("Registros");
+
+                dataTable.Columns.AddRange(new DataColumn[]
+                {
+                new DataColumn("Nombre"),
+                new DataColumn("Apellido"),
+                new DataColumn("DNI"),
+                new DataColumn("CUIT"),
+                new DataColumn("Celular"),
+                new DataColumn("Grupo"),
+                new DataColumn("Habilitado"),
+                new DataColumn("Alta")
+                });
+
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(dataTable);
+
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        wb.SaveAs(stream);
+
+                        TempData["AlertaMensaje"] = "Se ha exportado la planilla correctamente.";
+                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "registros.xlsx");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Informar error
+                TempData["AlertaTipo"] = "danger";
+                TempData["AlertaMensaje"] = "Error al leer el archivo. (" + ex.Message + ")";
+            }
+
+            return File(new byte[0], "application/octet-stream");
         }
     }
 }

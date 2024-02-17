@@ -2,7 +2,6 @@
 using AsistManager.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace AsistManager.Controllers
 {
