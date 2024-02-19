@@ -30,7 +30,7 @@
             </a>
 
             <a class="btn btn-success boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
-                asp-action="Import" asp-route-id="@Model.Id">
+                asp-controller="Archivo" asp-action="Index" asp-route-id="@Model.Id">
                 <span class="boton-grande-texto">
                     <i class="bi bi-database"></i>
                     Importar
@@ -38,7 +38,7 @@
             </a>
 
             <a class="btn btn-warning boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
-                asp-action="Update" asp-route-id="@Model.Id">
+                asp-controller="Acreditado" asp-action="Update" asp-route-id="@Model.Id">
                 <span class="boton-grande-texto">
                     <i class="bi bi-pencil-square"></i>
                     Editar
@@ -46,7 +46,7 @@
             </a>
 
             <a class="btn btn-danger boton-grande col mx-1 shadow-sm d-flex justify-content-center align-items-center"
-                asp-action="Delete" asp-route-id="@Model.Id">
+                asp-controller="Acreditado" asp-action="Delete" asp-route-id="@Model.Id">
                 <span class="boton-grande-texto">
                     <i class="bi bi-trash"></i>
                     Borrar

@@ -28,7 +28,7 @@
                         <input type="hidden" name="id" value="@Model?.Id" />
 
                         <!--Exportar plantilla de Excel para su modificación-->
-                        <button id="exportButton" type="submit" asp-controller="Evento" asp-action="Export"
+                        <button id="exportButton" type="submit" asp-controller="Archivo" asp-action="Export"
                                 class="btn btn-outline-dark btn-lg">
                             Exportar plantilla
                             <i class="bi bi-filetype-xls"></i>
@@ -42,14 +42,14 @@
                         </label>
 
                         <!--Previsualizar registros del archivo importado-->
-                        <button id="showButton" type="submit" asp-controller="Evento" asp-action="Read"
+                        <button id="showButton" type="submit" asp-controller="Archivo" asp-action="Read"
                                 class="btn btn-outline-dark btn-lg" disabled>
                             Consultar registros
                             <i class="bi bi-file-check"></i>
                         </button>
 
                         <!--Insertar registros del archivo a la base-->
-                        <button id="insertButton" type="submit" asp-controller="Evento" asp-action="Insert"
+                        <button id="insertButton" type="submit" asp-controller="Archivo" asp-action="Insert"
                                 class="btn btn-outline-success btn-lg">
                             Insertar registros
                             <i class="bi bi-database-add"></i>
