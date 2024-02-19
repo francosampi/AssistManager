@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="~/css/tablaRegistros.css" />
 </head>
 
-<table class="table table-hover table-responsive-lg tabla-registros mt-4">
+<table class="table table-hover table-responsive tabla-registros mt-4">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -29,28 +29,30 @@
                 <!--Informar datos del acreditado-->
                 <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Nombre)</td>
                 <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Apellido)</td>
-                <td>@Html.DisplayFor(m => registro.Acreditado.Dni)</td>
-                <td>@Html.DisplayFor(m => registro.Acreditado.Cuit)</td>
-                <td>@Html.DisplayFor(m => registro.Acreditado.Celular)</td>
-                <td>@Html.DisplayFor(m => registro.Acreditado.Grupo)</td>
-                <td>@(registro.Acreditado.Habilitado.HasValue ? (registro.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
-                <td>@(registro.Acreditado.Alta.HasValue ? (registro.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Dni)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Cuit)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Celular)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Acreditado.Grupo)</td>
+                <td class="rowCampo">@(registro.Acreditado.Habilitado.HasValue ? (registro.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</td>
+                <td class="rowCampo">@(registro.Acreditado.Alta.HasValue ? (registro.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</td>
 
                 <!--Informar hora de ingreso y egreso-->
-                <td>@Html.DisplayFor(m => registro.Ingreso.FechaOperacion)</td>
-                <td>@Html.DisplayFor(m => registro.Egreso.FechaOperacion)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Ingreso.FechaOperacion)</td>
+                <td class="rowCampo">@Html.DisplayFor(m => registro.Egreso.FechaOperacion)</td>
 
                 <!--Operaciones disponibles-->
-                <td class="d-flex justify-content-around">
-                    <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.Acreditado.IdEvento" asp-route-dni="@registro.Acreditado.Dni">
-                        <i class="bi-list-check"></i>
-                    </a>
-                    <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Acreditado.Id">
-                        <i class="bi-pencil"></i>
-                    </a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@registro.Acreditado.Id">
-                        <i class="bi-trash"></i>
-                    </a>
+                <td>
+                    <div class="d-inline-flex">
+                        <a class="btn btn-info" asp-action="Search" asp-route-id="@registro.Acreditado.IdEvento" asp-route-dni="@registro.Acreditado.Dni">
+                            <i class="bi-list-check"></i>
+                        </a>
+                        <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Acreditado.Id">
+                            <i class="bi-pencil"></i>
+                        </a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@registro.Acreditado.Id">
+                            <i class="bi-trash"></i>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }

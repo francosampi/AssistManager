@@ -36,11 +36,11 @@ namespace AsistManager.Controllers
                 var filtro = TempData["Filtro"] as string;
 
                 var resultados = acreditados.Where(vm => vm.Acreditado.Nombre.ToLower().Contains(filtro) ||
-                                                          vm.Acreditado.Apellido.ToLower().Contains(filtro) ||
-                                                          vm.Acreditado.Dni.ToLower().Contains(filtro) ||
-                                                          vm.Acreditado.Cuit.ToLower().Contains(filtro) ||
-                                                          vm.Acreditado.Celular.ToLower().Contains(filtro) ||
-                                                          vm.Acreditado.Grupo.ToLower().Contains(filtro));
+                                                         vm.Acreditado.Apellido.ToLower().Contains(filtro) ||
+                                                         vm.Acreditado.Dni.ToLower().Contains(filtro) ||
+                                                         vm.Acreditado.Cuit.ToLower().Contains(filtro) ||
+                                                         vm.Acreditado.Celular.ToLower().Contains(filtro) ||
+                                                         vm.Acreditado.Grupo.ToLower().Contains(filtro));
 
                 return View(resultados.ToList());
             }
@@ -260,7 +260,10 @@ namespace AsistManager.Controllers
         //Borrar el Acreditado
         public IActionResult Delete(int id, int a)
         {
-            var acreditado = _context.Acreditados.Find(id);
+            var acreditado = _context.Acreditados
+                .Include(a => a.Ingresos)
+                .Include(a => a.Egresos)
+                .FirstOrDefault(a => a.Id == id);
 
             //Verificar si el acreditado existe
             if (acreditado != null)

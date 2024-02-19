@@ -8,7 +8,9 @@
 <fieldset class="mt-4">
     <div class="col-md-6 card shadow">
         <div class="card-header">
-            <partial name="_BotonAtras" />
+            <a class="btn btn-secondary my-2" asp-controller="Acreditado" asp-action="Index" asp-route-id="@ViewBag.Evento.Id">
+                Atrás
+            </a>
         </div>
 
         <div class="card-body">
@@ -28,7 +30,7 @@
                         <label asp-for="Nombre" class="control-label fw-bold">
                             Nombre *
                         </label>
-                        <input asp-for="Nombre" class="form-control" />
+                        <input asp-for="Nombre" class="form-control" maxlength="20" />
                         <span asp-validation-for="Nombre" class="text-danger"></span>
                     </div>
 
@@ -36,7 +38,7 @@
                         <label asp-for="Apellido" class="control-label fw-bold">
                             Apellido *
                         </label>
-                        <input asp-for="Apellido" class="form-control" />
+                        <input asp-for="Apellido" class="form-control" maxlength="20" />
                         <span asp-validation-for="Apellido" class="text-danger"></span>
                     </div>
                 </div>
@@ -46,7 +48,7 @@
                         <label asp-for="Dni" class="control-label fw-bold">
                             DNI *
                         </label>
-                        <input asp-for="Dni" class="form-control" />
+                        <input asp-for="Dni" class="form-control" maxlength="8" />
                         <span asp-validation-for="Dni" class="text-danger"></span>
                     </div>
 
@@ -54,7 +56,7 @@
                         <label asp-for="Cuit" class="control-label fw-bold">
                             CUIT *
                         </label>
-                        <input asp-for="Cuit" class="form-control" />
+                        <input asp-for="Cuit" class="form-control" maxlength="15" />
                         <span asp-validation-for="Cuit" class="text-danger"></span>
                     </div>
                 </div>
@@ -62,13 +64,13 @@
                 <div class="row mt-3">
                     <div class="form-group col-md-6">
                         <label asp-for="Celular" class="control-label"></label>
-                        <input asp-for="Celular" class="form-control" />
+                        <input asp-for="Celular" class="form-control" maxlength="14" />
                         <span asp-validation-for="Celular" class="text-danger"></span>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label asp-for="Grupo" class="control-label"></label>
-                        <input asp-for="Grupo" class="form-control" />
+                        <input asp-for="Grupo" class="form-control" maxlength="25" />
                         <span asp-validation-for="Grupo" class="text-danger"></span>
                     </div>
                 </div>
