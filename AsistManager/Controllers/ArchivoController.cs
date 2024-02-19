@@ -142,6 +142,8 @@ namespace AsistManager.Controllers
         //Subir el excel de la base e insertar registros
         public async Task<IActionResult> Insert(int id, IFormFile file)
         {
+            var evento = _context.Eventos.Find(id);
+
             //Manejo de la codificación de caracteres específicos durante la lectura del archivo
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -209,6 +211,8 @@ namespace AsistManager.Controllers
 
                                     //Insertar registro en la base
                                     _context.Acreditados.Add(acreditado);
+
+                                    registros.Add(acreditado);
                                     contadorRegistros++;
                                 }
                             } while (reader.NextResult());
@@ -238,7 +242,7 @@ namespace AsistManager.Controllers
                 }
             }
 
-            return RedirectToAction("Menu", "Evento", new {id = id});
+            return View(nameof(Index), evento);
         }
 
         public FileResult Export(int id)

@@ -6,79 +6,78 @@
     <link rel="stylesheet" href="~/css/botones.css" />
 </head>
 
-<fieldset>
-    <h3>Manejo de archivos</h3>
+<h3>Manejo de archivos</h3>
 
-    <div class="mt-4">
+<fieldset class="mt-4">
+    <!--Mostrar alerta-->
+    <partial name="_Alert" />
 
-        <!--Mostrar alerta-->
-        <partial name="_Alert" />
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <a class="btn btn-secondary my-2" asp-controller="Evento" asp-action="Menu" asp-route-id="@Model.Id">
+                Atrás
+            </a>
+        </div>
 
-        <div class="card my-4 shadow-sm">
-            <div class="card-header">
-                <partial name="_BotonAtras" />
-            </div>
+        <div class="card-body">
 
-            <div class="card-body">
+            <!--Formulario para cargar archivo, y subirlo a la base-->
+            <form method="post" enctype="multipart/form-data">
+                <div class="d-flex flex-row justify-content-around my-2">
 
-                <!--Formulario para cargar archivo, y subirlo a la base-->
-                <form method="post" enctype="multipart/form-data">
-                    <div class="d-flex flex-row justify-content-around my-2">
+                    <input type="hidden" name="id" value="@Model?.Id" />
 
-                        <input type="hidden" name="id" value="@Model?.Id" />
+                    <!--Exportar plantilla de Excel para su modificación-->
+                    <button id="exportButton" type="submit" asp-controller="Archivo" asp-action="Export"
+                            class="btn btn-outline-dark btn-lg">
+                        Exportar plantilla
+                        <i class="bi bi-filetype-xls"></i>
+                    </button>
 
-                        <!--Exportar plantilla de Excel para su modificación-->
-                        <button id="exportButton" type="submit" asp-controller="Archivo" asp-action="Export"
-                                class="btn btn-outline-dark btn-lg">
-                            Exportar plantilla
-                            <i class="bi bi-filetype-xls"></i>
-                        </button>
+                    <!--Insertar archivo Excel para su lectura-->
+                    <label class="btn btn-outline-dark btn-lg">
+                        <input id="fileInput" type="file" name="file" onchange="alCargarArchivo()">
+                        Importar archivo
+                        <i class="bi bi-file-arrow-down"></i>
+                    </label>
 
-                        <!--Insertar archivo Excel para su lectura-->
-                        <label class="btn btn-outline-dark btn-lg">
-                            <input id="fileInput" type="file" name="file" onchange="alCargarArchivo()">
-                            Importar archivo
-                            <i class="bi bi-file-arrow-down"></i>
-                        </label>
+                    <!--Previsualizar registros del archivo importado-->
+                    <button id="showButton" type="submit" asp-controller="Archivo" asp-action="Read"
+                            class="btn btn-outline-dark btn-lg" disabled>
+                        Consultar registros
+                        <i class="bi bi-file-check"></i>
+                    </button>
 
-                        <!--Previsualizar registros del archivo importado-->
-                        <button id="showButton" type="submit" asp-controller="Archivo" asp-action="Read"
-                                class="btn btn-outline-dark btn-lg" disabled>
-                            Consultar registros
-                            <i class="bi bi-file-check"></i>
-                        </button>
+                    <!--Insertar registros del archivo a la base-->
+                    <button id="insertButton" type="submit" asp-controller="Archivo" asp-action="Insert"
+                            class="btn btn-outline-success btn-lg">
+                        Insertar registros
+                        <i class="bi bi-database-add"></i>
+                    </button>
+                </div>
+            </form>
 
-                        <!--Insertar registros del archivo a la base-->
-                        <button id="insertButton" type="submit" asp-controller="Archivo" asp-action="Insert"
-                                class="btn btn-outline-success btn-lg">
-                            Insertar registros
-                            <i class="bi bi-database-add"></i>
-                        </button>
-                    </div>
-                </form>
+            <!--Lista para previsualizar los registros antes de subirlos a la base-->
+            @if (ViewBag.Registros != null)
+            {
+                var listaRegistros = ViewBag.Registros as List<Acreditado>;
 
-                <!--Lista para previsualizar los registros antes de subirlos a la base-->
-                @if (ViewBag.Registros != null)
-                {
-                    var listaRegistros = ViewBag.Registros as List<Acreditado>;
+                <div class="mt-4">
+                    <hr />
+                    <!--Informar cantidad de acreditados-->
+                    @if (listaRegistros!.Count == 0)
+                    {
+                        <label class="fw-bold text-danger">No se han encontrado registros.</label>
+                    }
+                    else
+                    {
+                        <label class="fw-bold text-secondary">Mostrando @listaRegistros!.Count registro(s)</label>
+                    }
 
-                    <div class="mt-4">
-                        <hr />
-                        <!--Informar cantidad de acreditados-->
-                        @if (listaRegistros!.Count == 0)
-                        {
-                            <label class="fw-bold text-danger">No se han encontrado registros.</label>
-                        }
-                        else
-                        {
-                            <label class="fw-bold text-secondary">Mostrando @listaRegistros!.Count registro(s)</label>
-                        }
-
-                        <!--Tabla de registros-->
-                        <partial name="_TablaAcreditados" model="listaRegistros" />
-                    </div>   
-                }
-            </div>
+                    <!--Tabla de registros-->
+                    <partial name="_TablaAcreditados" model="listaRegistros" />
+                </div>   
+            }
         </div>
     </div>
 </fieldset>
