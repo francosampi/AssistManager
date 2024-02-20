@@ -271,7 +271,6 @@ namespace AsistManager.Controllers
                     {
                         wb.SaveAs(stream);
 
-                        TempData["AlertaMensaje"] = "Se ha exportado la planilla correctamente.";
                         return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "registros.xlsx");
                     }
                 }
