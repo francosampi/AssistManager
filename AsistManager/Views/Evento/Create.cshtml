@@ -17,14 +17,12 @@
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <!--Input de atributo nombre-->
                 <div class="form-group mt-3">
                     <label asp-for="Nombre" class="control-label"></label>
                     <input asp-for="Nombre" class="form-control" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
 
-                <!--Input de atributo fecha-->
                 <div class="form-group mt-3">
                     <label asp-for="FechaInicio" class="control-label"></label>
                     <input asp-for="FechaInicio" class="form-control" />

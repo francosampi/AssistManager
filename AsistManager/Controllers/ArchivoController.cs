@@ -5,9 +5,11 @@ using ExcelDataReader;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsistManager.Controllers
 {
+    [Authorize]
     public class ArchivoController : Controller
     {
         private readonly AsistManagerContext _context;

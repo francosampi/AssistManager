@@ -1,10 +1,12 @@
 ﻿using AsistManager.Models;
 using AsistManager.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AsistManager.Controllers
 {
+    [Authorize]
     public class AcreditadoController : Controller
     {
         private readonly AsistManagerContext _context;

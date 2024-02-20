@@ -1,0 +1,35 @@
+﻿@model AsistManager.Models.ViewModels.LoginViewModel;
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="mt-4">
+
+    <div class="col-md-6 card shadow">
+        <div class="card-header">
+            <h3 class="m-2">Iniciar sesión</h3>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Access" asp-action="Login" method="post">
+                <div class="form-group mt-3">
+                    <label asp-for="User" class="control-label">Usuario</label>
+                    <input type="text" class="form-control" placeholder="Usuario" asp-for="User" />
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="Password" class="control-label">Contraseña</label>
+                    <input type="password" class="form-control" placeholder="Contraseña" asp-for="Password" />
+                </div>
+                <div class="form-check mt-3">
+                    <input type="checkbox" class="form-check-input" asp-for="KeepLoggedIn" id="keepLoggedIn" />
+                    <label class="form-check-label" for="keepLoggedIn">Mantener iniciada mi sesión</label>
+                </div>
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-success shadow-sm w-100">Entrar</button>
+                </div>
+
+                <!--Mostrar alerta-->
+                <partial name="_Alert"></partial>
+            </form>
+        </div>
+    </div>
+</div>

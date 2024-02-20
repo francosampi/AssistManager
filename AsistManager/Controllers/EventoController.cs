@@ -1,15 +1,13 @@
 using AsistManager.Models;
 using AsistManager.Models.ViewModels;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using ExcelDataReader;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Text;
 
 namespace AsistManager.Controllers
 {
+    [Authorize]
     public class EventoController : Controller
     {
         private readonly AsistManagerContext _context;
