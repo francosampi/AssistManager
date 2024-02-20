@@ -70,7 +70,7 @@ namespace AsistManager.Controllers
                     {
                         using (var reader = ExcelReaderFactory.CreateReader(stream))
                         {
-                            int contadorRegistros=0;
+                            int contadorRegistros = 0;
                             int contadorAlertas = 0;
                             bool flagHeader = false;
 

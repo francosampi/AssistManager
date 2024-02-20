@@ -40,14 +40,10 @@ namespace AsistManager.Controllers
             var acreditados = _context.Acreditados;
 
             var chartRegistros = acreditados.Where(i => i.IdEvento == id).Count();
-            var chartHabilitados = acreditados.Where(i => i.IdEvento == id && i.Habilitado == true).Count();
-            var chartNoHabilitados = acreditados.Where(i => i.IdEvento == id && i.Habilitado == false).Count();
             var chartIngreso = acreditados.Where(i => i.IdEvento == id && _context.Ingresos.Any(ingreso => ingreso.IdAcreditado == i.Id)).Count();
             var chartEgreso = acreditados.Where(i => i.IdEvento == id && _context.Egresos.Any(egreso => egreso.IdAcreditado == i.Id)).Count();
 
             ViewData["ChartRegistros"] = chartRegistros;
-            ViewData["ChartHabilitados"] = chartHabilitados;
-            ViewData["ChartNoHabilitados"] = chartNoHabilitados;
             ViewData["ChartIngreso"] = chartIngreso;
             ViewData["ChartEgreso"] = chartEgreso;
 
