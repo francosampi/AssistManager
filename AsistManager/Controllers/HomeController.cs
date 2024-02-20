@@ -28,6 +28,7 @@ namespace AsistManager.Controllers
             return View();
         }
 
+        //Deslogearse y redirigir al login
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

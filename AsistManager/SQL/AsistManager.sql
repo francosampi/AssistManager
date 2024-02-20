@@ -1,3 +1,10 @@
+USE master;
+GO
+CREATE DATABASE AsistManager;
+GO
+USE AsistManager;
+GO
+
 CREATE TABLE evento
 (
     id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
