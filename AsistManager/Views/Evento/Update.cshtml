@@ -20,7 +20,7 @@
                 <!--Input para editar el Nombre-->
                 <div class="form-group mt-3">
                     <label asp-for="Nombre" class="control-label"></label>
-                    <input asp-for="Nombre" class="form-control" value="@ViewBag.NombreEvento" />
+                    <input asp-for="Nombre" class="form-control" value="@ViewBag.NombreEvento" maxlength="30" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
 

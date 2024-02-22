@@ -51,7 +51,7 @@ namespace AsistManager.Controllers
         }
 
         //Ir a vista para insertar un Acreditado
-        public IActionResult Create(int id)
+        public IActionResult Create(int id, string dniEscaneado)
         {
             var evento = _context.Eventos.Find(id);
 
@@ -61,6 +61,16 @@ namespace AsistManager.Controllers
             }
 
             ViewData["Evento"] = evento;
+
+            if(dniEscaneado!=null)
+            {
+                AcreditadoViewModel model = new AcreditadoViewModel()
+                {
+                    Dni = dniEscaneado
+                };
+
+                return View(model);
+            }
 
             return View();
         }
@@ -119,9 +129,8 @@ namespace AsistManager.Controllers
             return RedirectToAction(nameof(Index), new { id = id });
         }
 
-
         //Buscar un acreditado por DNI (desde el listado)
-        public IActionResult Search(int id, string dni)
+        public IActionResult Details(int id, string dni)
         {
             //Encontrar registro que coincida con DNI y Evento
             var acreditado = _context.Acreditados.FirstOrDefault(a => a.Dni == dni && a.IdEvento == id);
@@ -139,7 +148,7 @@ namespace AsistManager.Controllers
             var ingreso = _context.Ingresos.FirstOrDefault(i => i.IdAcreditado == acreditado.Id);
             var egreso = _context.Egresos.FirstOrDefault(i => i.IdAcreditado == acreditado.Id);
 
-            //Pasar el acreditado y el registro de ingreso a la vista Search
+            //Pasar el acreditado y el registro de ingreso a la vista Details
             var model = new AcreditadoSearchViewModel
             {
                 Acreditado = acreditado,
@@ -149,7 +158,6 @@ namespace AsistManager.Controllers
 
             return View(model);
         }
-
 
         //Ir a vista para editar un Acreditado
         public IActionResult Update(int id)

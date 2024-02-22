@@ -22,7 +22,7 @@ namespace AsistManager.Controllers
 
             if(claimUser.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Evento");
             }
 
             return View();
@@ -54,7 +54,7 @@ namespace AsistManager.Controllers
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), properties);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Evento");
             }
 
             TempData["AlertaTipo"] = "danger";

@@ -20,12 +20,14 @@
                 Nuevo
             </a>
 
-            <!--Sección para buscar por DNI-->
-            <div class="my-3 row col-md-3">
-                <h5 class="text-muted">Buscar por cualquier campo</h5>
+            <hr />
 
+            <!--Sección para buscar por cualquier campo-->
+            <div class="d-flex flex-inline justify-content-around m-4">
                 <form asp-action="Filter" method="get" asp-route-id="@ViewBag.Evento.Id">
+                    <h5 class="text-muted">Buscar por cualquier campo</h5>
                     <div class="input-group">
+                        
                         <input type="text" class="form-control" name="filtro" placeholder="Ingrese una palabra">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-dark">
@@ -34,6 +36,15 @@
                         </div>
                     </div>
                 </form>
+
+                <!--Sección para buscar por DNI-->
+                <div>
+                    <h5 class="text-muted">Escanear DNI con pistola</h5>
+                    <a class="btn btn-dark w-100" asp-controller="Scan" asp-action="Index" asp-route-id="@ViewBag.Evento.Id">
+                        <i class="bi bi-qr-code"></i>
+                        Escanear
+                    </a>
+                </div>
             </div>
         </div>
 

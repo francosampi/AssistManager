@@ -1,0 +1,49 @@
+﻿@model Evento
+@using AsistManager.Models.ViewModels
+
+@{
+    var datosDNI = TempData["DatosEscaneo"] as Dictionary<string, string>;
+}
+
+<!--Mostrar alerta-->
+<partial name="_Alert" />
+<partial name="_SectionCargarNuevoDNI"/>
+
+<!--Muestro instrucción de escaneo de DNI-->
+<div class="card shadow mt-4">
+    <div class="card-header">
+        <a class="btn btn-secondary my-2" asp-controller="Acreditado" asp-action="Index" asp-route-id="@Model.Id">
+            Atrás
+        </a>
+    </div>
+    <div class="card-body">
+        <form asp-action="Scan" asp-route-id="@Model.Id" class="mb-4">
+            <h4 id="estado" class="text-primary">Escanee el DNI ahora...</h4>
+            <input type="text" id="inputScan" name="codigo" oninput="cambiarEstado()" onblur="focusInput()" autofocus>
+        </form>
+        
+        <div class="spinner-border text-secondary" style="width: 5rem; height: 5rem;" role="status"></div>
+    </div>
+</div>
+
+<script>
+    //Recibir el scope apenas se ingresa a la página
+    function focusInput() {
+        document.getElementById("inputScan").focus();
+    }
+
+    //Informar el estado del escaneo en pantalla
+    function cambiarEstado() {
+        document.getElementById("estado").textContent = "Verificando...";
+        estado.textContent = "Verificando...";
+        estado.classList.remove("text-success");
+        estado.classList.add("text-success");
+    }
+</script>
+
+<style>
+    #inputScan {
+        position: absolute;
+        left: -9999px;
+    }
+</style>

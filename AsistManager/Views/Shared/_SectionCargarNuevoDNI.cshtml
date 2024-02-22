@@ -1,0 +1,28 @@
+﻿@if (TempData["NuevoAcreditadoACargar"] != null)
+{
+    var diccAcreditadoACargar = TempData["NuevoAcreditadoACargar"] as Dictionary<string, string>;
+
+    if (diccAcreditadoACargar!=null)
+    {
+        //Rescato los datos necesarios para la vista y crear el acreditado
+        var idEventoAcreditadoACargar = diccAcreditadoACargar?["IdEvento"];
+        var dniAcreditadoACargar = diccAcreditadoACargar?["Documento"];
+
+        <div class="alert alert-warning" alert-dismissible fade show shadow-sm" role="alert">
+            <h3>No se ha encontrado el registro</h3>
+
+            <div class="mt-3">
+                <p>¿Desea cargar un nuevo registro con este DNI: <b>@dniAcreditadoACargar</b>?</p>
+            </div>
+
+            <hr />
+
+            <div class="d-flex flex-inline justify-content-around">
+                <a class="btn btn-primary" asp-controller="Acreditado" asp-action="Create" asp-route-id="@idEventoAcreditadoACargar" asp-route-dniEscaneado="@dniAcreditadoACargar">
+                    <i class="bi bi-people p-1"></i>
+                    Cargar
+                </a>
+            </div>
+        </div>
+    }
+}
