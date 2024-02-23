@@ -341,11 +341,13 @@ namespace AsistManager.Controllers
 
                 if (huboEscaneo.HasValue && huboEscaneo.Value)
                 {
+                    TempData["HuboEscaneo"] = false;
                     return RedirectToAction("Index", "Scan", new { id = acreditado.IdEvento });
                 }
 
                 return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
             }
+
             return NotFound();
         }
 
