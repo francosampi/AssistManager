@@ -163,6 +163,7 @@ namespace AsistManager.Controllers
                         using (var reader = ExcelReaderFactory.CreateReader(stream))
                         {
                             int contadorRegistros = 0;
+                            int contadorAlertas = 0;
                             bool flagHeader = false;
 
                             do
@@ -177,25 +178,33 @@ namespace AsistManager.Controllers
                                     }
 
                                     //Por cada registro, generar un objeto
-                                    Acreditado acreditado = Utilities.LeerFilaExcelAcreditado(reader);
+                                    Acreditado? acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
-                                    //Asigno el ID del Evento correspondiente
-                                    acreditado.IdEvento = id;
+                                    if(acreditado!=null)
+                                    {
+                                        //Asigno el ID del Evento correspondiente
+                                        acreditado.IdEvento = id;
 
-                                    //Insertar registro en la base
-                                    _context.Acreditados.Add(acreditado);
+                                        //Insertar registro en la base
+                                        _context.Acreditados.Add(acreditado);
 
-                                    registros.Add(acreditado);
+                                        registros.Add(acreditado);
+                                    }
+                                    else
+                                    {
+                                        contadorAlertas++;
+                                    }
+
+                                    contadorRegistros++;
                                 }
                             } while (reader.NextResult());
-
-                            contadorRegistros = registros.Count;
 
                             //Guardar cambios en la base
                             await _context.SaveChangesAsync();
 
                             //Informar lo acontecido (registros insertado y alertas)
-                            string mensajeRegistros = "Se han insertado los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
+                            string mensajeRegistros = "Se han insertado los <b>" + registros.Count + " registro(s)</b> de los " + contadorRegistros + " correctamente. <br><hr/>";
+                            string mensajeAlerta = contadorAlertas > 0 ? "Hay <b>" + contadorAlertas + " registro(s)</b> con campos vacíos sin insertar." : "";
 
                             if (contadorRegistros == 0)
                             {
@@ -204,7 +213,7 @@ namespace AsistManager.Controllers
                             }
 
                             ViewData["Registros"] = registros;
-                            TempData["AlertaMensaje"] = mensajeRegistros;
+                            TempData["AlertaMensaje"] = mensajeRegistros + mensajeAlerta;
                         }
                     }
                     catch (Exception ex)
@@ -219,7 +228,7 @@ namespace AsistManager.Controllers
             return View(nameof(Index), evento);
         }
 
-        public FileResult Export(int id)
+        public FileResult ExportSheet(int id)
         {
             try
             {
@@ -236,6 +245,66 @@ namespace AsistManager.Controllers
                     new DataColumn("Habilitado"),
                     new DataColumn("Alta")
                 ]);
+
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(dataTable);
+
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        wb.SaveAs(stream);
+
+                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "registros.xlsx");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Informar error
+                TempData["AlertaTipo"] = "danger";
+                TempData["AlertaMensaje"] = "Error al leer el archivo. (" + ex.Message + ")";
+            }
+
+            return File(new byte[0], "application/octet-stream");
+        }
+
+        public FileResult ExportAccredited(int id)
+        {
+            var evento = _context.Eventos.Find(id);
+
+            try
+            {
+                DataTable dataTable = new DataTable("Registros");
+
+                dataTable.Columns.AddRange(
+                [
+                    new DataColumn("Nombre"),
+                    new DataColumn("Apellido"),
+                    new DataColumn("DNI"),
+                    new DataColumn("CUIT"),
+                    new DataColumn("Celular"),
+                    new DataColumn("Grupo"),
+                    new DataColumn("Habilitado"),
+                    new DataColumn("Alta")
+                ]);
+
+                var acreditados = _context.Acreditados
+                    .Where(a => a.IdEvento == id);
+
+                // Agregar los datos de los acreditados a la tabla de datos
+                foreach (var acreditado in acreditados)
+                {
+                    dataTable.Rows.Add(
+                        acreditado.Nombre,
+                        acreditado.Apellido,
+                        acreditado.Dni,
+                        acreditado.Cuit,
+                        acreditado.Celular,
+                        acreditado.Grupo,
+                        acreditado.Habilitado ? "Sí" : "No",
+                        acreditado.Alta ? "Sí" : "No"
+                    );
+                }
 
                 using (XLWorkbook wb = new XLWorkbook())
                 {

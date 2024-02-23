@@ -50,26 +50,35 @@ namespace AsistManager.Helpers
             return filter;
         }
 
-        public static Acreditado LeerFilaExcelAcreditado(IExcelDataReader reader)
+        public static Acreditado? LeerFilaExcelAcreditado(IExcelDataReader reader)
         {
-            Acreditado acreditado = new Acreditado();
+            //Leer los valores de las celdas
+            string nombre = reader.GetValue(0)?.ToString() ?? "";
+            string apellido = reader.GetValue(1)?.ToString() ?? "";
+            string dni = reader.GetValue(2)?.ToString() ?? "";
+            string cuit = reader.GetValue(3)?.ToString() ?? "";
 
-            acreditado.Nombre = reader.GetValue(0)?.ToString() ?? "";
-            acreditado.Apellido = reader.GetValue(1)?.ToString() ?? "";
-            acreditado.Dni = reader.GetValue(2)?.ToString() ?? "";
-            acreditado.Cuit = reader.GetValue(3)?.ToString() ?? "";
-            acreditado.Celular = reader.GetValue(4)?.ToString() ?? "";
-            acreditado.Grupo = reader.GetValue(5)?.ToString() ?? "";
+            //Verificar si alguno de los campos requeridos está vacío
+            if (string.IsNullOrWhiteSpace(nombre) ||
+                string.IsNullOrWhiteSpace(apellido) ||
+                string.IsNullOrWhiteSpace(dni) ||
+                string.IsNullOrWhiteSpace(cuit))
+            {
+                return null;
+            }
 
-            //Detectar valor booleano o cadena
-            string valorHabilitado = reader.GetValue(6)?.ToString() ?? string.Empty;
-            acreditado.Habilitado = Utilities.EsCampoVerdadero(valorHabilitado);
-
-            //Detectar valor booleano o cadena
-            string valorAlta = reader.GetValue(7)?.ToString() ?? string.Empty;
-            acreditado.Alta = Utilities.EsCampoVerdadero(valorAlta);
-
-            return acreditado;
+            //Crear una instancia si todos los campos requeridos tienen valor
+            return new Acreditado
+            {
+                Nombre = nombre,
+                Apellido = apellido,
+                Dni = dni,
+                Cuit = cuit,
+                Celular = reader.GetValue(4)?.ToString() ?? "",
+                Grupo = reader.GetValue(5)?.ToString() ?? "",
+                Habilitado = Utilities.EsCampoVerdadero(reader.GetValue(6)?.ToString() ?? ""),
+                Alta = Utilities.EsCampoVerdadero(reader.GetValue(7)?.ToString() ?? "")
+            };
         }
     }
 }
