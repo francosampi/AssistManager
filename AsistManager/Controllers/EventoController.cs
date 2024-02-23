@@ -1,3 +1,4 @@
+using AsistManager.Helpers;
 using AsistManager.Models;
 using AsistManager.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,42 @@ namespace AsistManager.Controllers
         {
             var eventos = _context.Eventos;
 
+            //Si existe una búsqueda por filtro, devolver esa lista
+            if (TempData["Filtro"] != null)
+            {
+                //Eliminar espacios en blanco, convertir a minusculas y remover tildes
+                var filtro = TempData["Filtro"] as string;
+                filtro = Utilities.PrepareFilter(filtro);
+
+                var resultados = await eventos.ToListAsync();
+
+                resultados = resultados.Where(vm => Utilities.PrepareFilter(vm.Nombre).Contains(filtro) ||
+                                                    vm.FechaInicio.ToString("dd/MM/yyyy").Contains(filtro)).ToList();
+
+                return View(resultados);
+            }
+
             return View(await eventos.ToListAsync());
+        }
+
+        public IActionResult Filter(int id, string filtro)
+        {
+            var filtroInicial = filtro;
+
+            if (string.IsNullOrEmpty(filtro))
+            {
+                TempData["AlertaTipo"] = "warning";
+                TempData["AlertaMensaje"] = "El filtro de búsqueda está vacío.";
+            }
+            else
+            {
+                TempData["Filtro"] = filtro;
+            }
+
+            //Para rellenar el campo búsqueda con lo último buscado
+            TempData["PalabraBuscada"] = filtroInicial;
+
+            return RedirectToAction(nameof(Index), new { id = id });
         }
 
         //Ir a la vista para las operaciones del Evento

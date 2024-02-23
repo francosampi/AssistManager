@@ -19,6 +19,22 @@
                 <i class="bi bi-calendar-plus p-1"></i>
                 Nuevo
             </a>
+
+            <!--Sección para buscar por cualquier campo-->
+            <div class="col-md-3 my-4">
+                <form asp-action="Filter" method="get">
+                    <h5 class="text-muted">Buscar por cualquier campo</h5>
+                    <div class="input-group">
+
+                        <input type="text" class="form-control" name="filtro" placeholder="Ingrese una palabra" value="@TempData["PalabraBuscada"]">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-dark">
+                                <i class="bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
         
         <div class="card-body">

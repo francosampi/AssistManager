@@ -45,16 +45,36 @@ namespace AsistManager.Controllers
                 var resultados = await acreditados.ToListAsync();
 
                 resultados = resultados.Where(vm => Utilities.PrepareFilter(vm.Acreditado.Nombre).Contains(filtro) ||
-                                                         Utilities.PrepareFilter(vm.Acreditado.Apellido).Contains(filtro) ||
-                                                         Utilities.PrepareFilter(vm.Acreditado.Dni).Contains(filtro) ||
-                                                         Utilities.PrepareFilter(vm.Acreditado.Cuit).Contains(filtro) ||
-                                                         Utilities.PrepareFilter(vm.Acreditado.Celular).Contains(filtro) ||
-                                                         Utilities.PrepareFilter(vm.Acreditado.Grupo).Contains(filtro)).ToList();
+                                                    Utilities.PrepareFilter(vm.Acreditado.Apellido).Contains(filtro) ||
+                                                    Utilities.PrepareFilter(vm.Acreditado.Dni).Contains(filtro) ||
+                                                    Utilities.PrepareFilter(vm.Acreditado.Cuit).Contains(filtro) ||
+                                                    Utilities.PrepareFilter(vm.Acreditado.Celular).Contains(filtro) ||
+                                                    Utilities.PrepareFilter(vm.Acreditado.Grupo).Contains(filtro)).ToList();
 
                 return View(resultados);
             }
 
             return View(await acreditados.ToListAsync());
+        }
+
+        public IActionResult Filter(int id, string filtro)
+        {
+            var filtroInicial = filtro;
+
+            if (string.IsNullOrEmpty(filtro))
+            {
+                TempData["AlertaTipo"] = "warning";
+                TempData["AlertaMensaje"] = "El filtro de búsqueda está vacío.";
+            }
+            else
+            {
+                TempData["Filtro"] = filtro;
+            }
+
+            //Para rellenar el campo búsqueda con lo último buscado
+            TempData["PalabraBuscada"] = filtroInicial;
+
+            return RedirectToAction(nameof(Index), new { id = id });
         }
 
         //Ir a vista para insertar un Acreditado
@@ -119,26 +139,6 @@ namespace AsistManager.Controllers
             }
 
             return View(model);
-        }
-
-        public IActionResult Filter(int id, string filtro)
-        {
-            var filtroInicial = filtro;
-
-            if (string.IsNullOrEmpty(filtro))
-            {
-                TempData["AlertaTipo"] = "warning";
-                TempData["AlertaMensaje"] = "El filtro de búsqueda está vacío.";
-            }
-            else
-            {
-                TempData["Filtro"] = filtro;
-            }
-
-            //Para rellenar el campo búsqueda con lo último buscado
-            TempData["PalabraBuscada"] = filtroInicial;
-
-            return RedirectToAction(nameof(Index), new { id = id });
         }
 
         //Buscar un acreditado por DNI y el id del Evento (desde el listado)
