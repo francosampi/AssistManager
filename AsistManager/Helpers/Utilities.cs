@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using AsistManager.Models;
+using ExcelDataReader;
+using System.Globalization;
 using System.Text;
 
 namespace AsistManager.Helpers
@@ -41,11 +43,33 @@ namespace AsistManager.Helpers
         }
 
         //Preparar string para un filtro
-        public static string PrepareFilter(string filtro)
+        public static string PrepareFilter(string filter)
         {
-            filtro = filtro.Trim().ToLower();
-            filtro = RemoveAccents(filtro);
-            return filtro;
+            filter = filter.Trim().ToLower();
+            filter = RemoveAccents(filter);
+            return filter;
+        }
+
+        public static Acreditado LeerFilaExcelAcreditado(IExcelDataReader reader)
+        {
+            Acreditado acreditado = new Acreditado();
+
+            acreditado.Nombre = reader.GetValue(0)?.ToString() ?? "";
+            acreditado.Apellido = reader.GetValue(1)?.ToString() ?? "";
+            acreditado.Dni = reader.GetValue(2)?.ToString() ?? "";
+            acreditado.Cuit = reader.GetValue(3)?.ToString() ?? "";
+            acreditado.Celular = reader.GetValue(4)?.ToString() ?? "";
+            acreditado.Grupo = reader.GetValue(5)?.ToString() ?? "";
+
+            //Detectar valor booleano o cadena
+            string valorHabilitado = reader.GetValue(6)?.ToString() ?? string.Empty;
+            acreditado.Habilitado = Utilities.EsCampoVerdadero(valorHabilitado);
+
+            //Detectar valor booleano o cadena
+            string valorAlta = reader.GetValue(7)?.ToString() ?? string.Empty;
+            acreditado.Alta = Utilities.EsCampoVerdadero(valorAlta);
+
+            return acreditado;
         }
     }
 }

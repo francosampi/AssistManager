@@ -86,32 +86,18 @@ namespace AsistManager.Controllers
                                     }
 
                                     //Por cada registro, generar un objeto
-                                    Acreditado acreditado = new Acreditado();
+                                    Acreditado acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
-                                    acreditado.Nombre = reader.GetValue(0)?.ToString();
-                                    acreditado.Apellido = reader.GetValue(1)?.ToString();
-                                    acreditado.Dni = reader.GetValue(2)?.ToString();
-                                    acreditado.Cuit = reader.GetValue(3)?.ToString();
-                                    acreditado.Celular = reader.GetValue(4)?.ToString();
-                                    acreditado.Grupo = reader.GetValue(5)?.ToString();
-
-                                    //Detectar valor booleano o cadena
-                                    string valorHabilitado = reader.GetValue(6)?.ToString() ?? string.Empty;
-                                    acreditado.Habilitado = Utilities.EsCampoVerdadero(valorHabilitado);
-
-                                    //Detectar valor booleano o cadena
-                                    string valorAlta = reader.GetValue(7)?.ToString() ?? string.Empty;
-                                    acreditado.Alta = Utilities.EsCampoVerdadero(valorAlta);
-
-                                    if (acreditado.Dni==null)
+                                    if (acreditado.Dni == null)
                                     {
                                         contadorAlertas++;
                                     }
 
                                     registros.Add(acreditado);
-                                    contadorRegistros++;
                                 }
                             } while (reader.NextResult());
+
+                            contadorRegistros = registros.Count;
 
                             //Informar lo acontecido (registros leídos y alertas)
                             string mensajeRegistros = "Se han leído los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
@@ -191,22 +177,7 @@ namespace AsistManager.Controllers
                                     }
 
                                     //Por cada registro, generar un objeto
-                                    Acreditado acreditado = new Acreditado();
-
-                                    acreditado.Nombre = reader.GetValue(0)?.ToString();
-                                    acreditado.Apellido = reader.GetValue(1)?.ToString();
-                                    acreditado.Dni = reader.GetValue(2)?.ToString();
-                                    acreditado.Cuit = reader.GetValue(3)?.ToString();
-                                    acreditado.Celular = reader.GetValue(4)?.ToString();
-                                    acreditado.Grupo = reader.GetValue(5)?.ToString();
-
-                                    //Detectar valor booleano o cadena
-                                    string valorHabilitado = reader.GetValue(6)?.ToString() ?? string.Empty;
-                                    acreditado.Habilitado = Utilities.EsCampoVerdadero(valorHabilitado);
-
-                                    //Detectar valor booleano o cadena
-                                    string valorAlta = reader.GetValue(7)?.ToString() ?? string.Empty;
-                                    acreditado.Alta = Utilities.EsCampoVerdadero(valorAlta);
+                                    Acreditado acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
                                     //Asigno el ID del Evento correspondiente
                                     acreditado.IdEvento = id;
@@ -215,9 +186,10 @@ namespace AsistManager.Controllers
                                     _context.Acreditados.Add(acreditado);
 
                                     registros.Add(acreditado);
-                                    contadorRegistros++;
                                 }
                             } while (reader.NextResult());
+
+                            contadorRegistros = registros.Count;
 
                             //Guardar cambios en la base
                             await _context.SaveChangesAsync();

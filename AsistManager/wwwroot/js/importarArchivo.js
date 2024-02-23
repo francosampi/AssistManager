@@ -9,17 +9,15 @@ function alCargarArchivo() {
 }
 
 //Por cada registro sin DNI, colorearlo
-$(document).ready(function () {
-    var miTabla = $('.tabla-registros');
+var miTabla = $('.tabla-registros');
 
-    //Iterar sobre las fila de la tabla
-    miTabla.find('tbody tr').each(function () {
-        var fila = $(this);
-        var dni = fila.find('td:eq(2)').text();
+//Iterar sobre las fila de la tabla
+miTabla.find('tbody tr').each(function () {
+    var fila = $(this);
+    var dni = fila.find('td:eq(2)').text();
 
-        //Aplicar estilo
-        if (dni.trim() === '') {
-            fila.addClass('table-danger');
-        }
-    });
+    //Aplicar estilo
+    if (dni.trim() === '') {
+        fila.addClass('table-danger');
+    }
 });

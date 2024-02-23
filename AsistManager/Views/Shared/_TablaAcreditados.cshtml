@@ -7,10 +7,11 @@
             <th>Apellido</th>
             <th>DNI</th>
             <th>CUIT</th>
-            <th>Habilitado</th>
             <th>Celular</th>
             <th>Grupo</th>
+            <th>Habilitado</th>
             <th>Alta</th>
+            <th></th>
         </tr>
     </thead>
 
@@ -18,15 +19,48 @@
         <!--Recorrer registros la lista de acreditados y mostrarlos-->
         @foreach (var registro in Model)
         {
-            <tr>
-                <td>@Html.DisplayFor(m => registro.Nombre)</td>
-                <td>@Html.DisplayFor(m => registro.Apellido)</td>
-                <td>@Html.DisplayFor(m => registro.Dni)</td>
-                <td>@Html.DisplayFor(m => registro.Cuit)</td>
-                <td>@Html.DisplayFor(m => registro.Celular)</td>
-                <td>@Html.DisplayFor(m => registro.Grupo)</td>
+            int errores = 0;
+            bool errorCritico = false;
+            string[] errorInfo = { };
+            string estiloRow = "";
+
+            //Verificar la cantidad de errores
+            List<string> propiedades = new List<string> { registro.Dni, registro.Nombre, registro.Apellido, registro.Cuit };
+
+            errores += propiedades.Count(prop => string.IsNullOrEmpty(prop));
+            errorCritico = errores > 0 && string.IsNullOrEmpty(registro.Dni);
+
+            @if (errores > 0)
+            {
+                estiloRow = errorCritico ? "bg-danger text-white" : "bg-warning";
+            }
+
+            <tr class=@estiloRow>
+                <td>@registro.Nombre</td>
+                <td>@registro.Apellido</td>
+                <td>@registro.Dni</td>
+                <td>@registro.Cuit</td>
+                <td>@registro.Celular</td>
+                <td>@registro.Grupo</td>
                 <td>@(registro.Habilitado ? "Sí" : "No")</td>
                 <td>@(registro.Alta ? "Sí" : "No")</td>
+                <td>
+                    @if (errores > 0)
+                    {
+                        if (errorCritico)
+                        {
+                            <i class="bi bi-exclamation-circle text-white"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-exclamation-circle text-white"></i>
+                        }
+                    }
+                    else
+                    {
+                        <i class="bi bi-check-circle text-success"></i>
+                    }
+                </td>
             </tr>
         }
     </tbody>

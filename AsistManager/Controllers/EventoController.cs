@@ -53,10 +53,10 @@ namespace AsistManager.Controllers
             else
             {
                 TempData["Filtro"] = filtro;
-            }
 
-            //Para rellenar el campo búsqueda con lo último buscado
-            TempData["PalabraBuscada"] = filtroInicial;
+                //Para rellenar el campo búsqueda con lo último buscado
+                TempData["PalabraBuscada"] = filtroInicial.Trim();
+            }
 
             return RedirectToAction(nameof(Index), new { id = id });
         }
