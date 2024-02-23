@@ -21,6 +21,7 @@ namespace AsistManager.Controllers
         {
             //Buscar Acreditado con su Evento asignado
             var evento = _context.Eventos.Find(id);
+
             var acreditados = _context.Acreditados
                 .Where(a => a.IdEvento == id)
                 .Select(a => new AcreditadoSearchViewModel
@@ -129,7 +130,7 @@ namespace AsistManager.Controllers
             return RedirectToAction(nameof(Index), new { id = id });
         }
 
-        //Buscar un acreditado por DNI (desde el listado)
+        //Buscar un acreditado por DNI y el id del Evento (desde el listado)
         public IActionResult Details(int id, string dni)
         {
             //Encontrar registro que coincida con DNI y Evento
@@ -324,9 +325,16 @@ namespace AsistManager.Controllers
                 TempData["AlertaTipo"] = "success";
                 TempData["AlertaMensaje"] = $"Se registró el ingreso del registro <b>{acreditado.Dni}</b> exitosamente ({fecha}).";
 
+                //Determinar a que controlador y acción se debe redirigir si hubo escaneo o no
+                var huboEscaneo = TempData["HuboEscaneo"] as bool?;
+
+                if (huboEscaneo.HasValue && huboEscaneo.Value)
+                {
+                    return RedirectToAction("Index", "Scan", new { id = acreditado.IdEvento });
+                }
+
                 return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
             }
-
             return NotFound();
         }
 
@@ -354,6 +362,14 @@ namespace AsistManager.Controllers
                 //Redirecciono al Index y muestro alerta
                 TempData["AlertaTipo"] = "success";
                 TempData["AlertaMensaje"] = $"Se registró el egreso del registro <b>{acreditado.Dni}</b> exitosamente ({fecha}).";
+
+                //Determinar a que controlador y acción se debe redirigir si hubo escaneo o no
+                var huboEscaneo = TempData["HuboEscaneo"] as bool?;
+
+                if (huboEscaneo.HasValue && huboEscaneo.Value)
+                {
+                    return RedirectToAction("Index", "Scan", new { id = acreditado.IdEvento });
+                }
 
                 return RedirectToAction(nameof(Index), new { id = acreditado.IdEvento });
             }

@@ -48,12 +48,6 @@ namespace AsistManager.Controllers
 
                     if (acreditado == null)
                     {
-                        //Mostrar mensaje de alerta si el acreditado no existe
-                        /*
-                         TempData["AlertaTipo"] = "danger";
-                        TempData["AlertaMensaje"] = $"No se encontró ningún registro con el DNI: <b>{dni}</b>. ¿Desea cargarlo?";
-                        */
-
                         //Crear un diccionario temporal, por si se decide cargar al acreditado
                         Dictionary<string, string> datosDNI = new Dictionary<string, string>
                         {
@@ -85,6 +79,8 @@ namespace AsistManager.Controllers
                         Ingreso = ingreso,
                         Egreso = egreso
                     };
+
+                    TempData["HuboEscaneo"] = true;
 
                     return RedirectToAction(nameof(AcreditadoController.Details), "Acreditado", new { id = id, dni = dni });
                 }

@@ -1,10 +1,6 @@
 ﻿@model Evento
 @using AsistManager.Models.ViewModels
 
-@{
-    var datosDNI = TempData["DatosEscaneo"] as Dictionary<string, string>;
-}
-
 <!--Mostrar alerta-->
 <partial name="_Alert" />
 <partial name="_SectionCargarNuevoDNI"/>
@@ -27,7 +23,7 @@
 </div>
 
 <script>
-    //Recibir el scope apenas se ingresa a la página
+    //Recibir el focus apenas se ingresa a la página
     function focusInput() {
         document.getElementById("inputScan").focus();
     }
