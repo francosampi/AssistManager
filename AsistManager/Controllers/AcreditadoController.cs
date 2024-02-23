@@ -1,4 +1,5 @@
-﻿using AsistManager.Models;
+﻿using AsistManager.Helpers;
+using AsistManager.Models;
 using AsistManager.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,8 @@ namespace AsistManager.Controllers
         public async Task<IActionResult> Index(int id)
         {
             //Buscar Acreditado con su Evento asignado
-            var evento = _context.Eventos.Find(id);
+            var eventoTask = _context.Eventos.FindAsync(id);
+            var evento = await eventoTask;
 
             var acreditados = _context.Acreditados
                 .Where(a => a.IdEvento == id)
@@ -36,16 +38,20 @@ namespace AsistManager.Controllers
             //Si existe una búsqueda por filtro, devolver esa lista
             if (TempData["Filtro"] != null)
             {
+                //Eliminar espacios en blanco, convertir a minusculas y remover tildes
                 var filtro = TempData["Filtro"] as string;
+                filtro = Utilities.PrepareFilter(filtro);
 
-                var resultados = acreditados.Where(vm => vm.Acreditado.Nombre.ToLower().Contains(filtro) ||
-                                                         vm.Acreditado.Apellido.ToLower().Contains(filtro) ||
-                                                         vm.Acreditado.Dni.ToLower().Contains(filtro) ||
-                                                         vm.Acreditado.Cuit.ToLower().Contains(filtro) ||
-                                                         vm.Acreditado.Celular.ToLower().Contains(filtro) ||
-                                                         vm.Acreditado.Grupo.ToLower().Contains(filtro));
+                var resultados = await acreditados.ToListAsync();
 
-                return View(resultados.ToList());
+                resultados = resultados.Where(vm => Utilities.PrepareFilter(vm.Acreditado.Nombre).Contains(filtro) ||
+                                                         Utilities.PrepareFilter(vm.Acreditado.Apellido).Contains(filtro) ||
+                                                         Utilities.PrepareFilter(vm.Acreditado.Dni).Contains(filtro) ||
+                                                         Utilities.PrepareFilter(vm.Acreditado.Cuit).Contains(filtro) ||
+                                                         Utilities.PrepareFilter(vm.Acreditado.Celular).Contains(filtro) ||
+                                                         Utilities.PrepareFilter(vm.Acreditado.Grupo).Contains(filtro)).ToList();
+
+                return View(resultados);
             }
 
             return View(await acreditados.ToListAsync());
@@ -117,6 +123,8 @@ namespace AsistManager.Controllers
 
         public IActionResult Filter(int id, string filtro)
         {
+            var filtroInicial = filtro;
+
             if (string.IsNullOrEmpty(filtro))
             {
                 TempData["AlertaTipo"] = "warning";
@@ -126,6 +134,9 @@ namespace AsistManager.Controllers
             {
                 TempData["Filtro"] = filtro;
             }
+
+            //Para rellenar el campo búsqueda con lo último buscado
+            TempData["PalabraBuscada"] = filtroInicial;
 
             return RedirectToAction(nameof(Index), new { id = id });
         }

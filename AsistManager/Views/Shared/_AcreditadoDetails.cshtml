@@ -9,6 +9,6 @@
     <p><strong>Celular:</strong> @(Model.Acreditado.Celular ?? "-")</p>
     <p><strong>CUIT:</strong> @(Model.Acreditado.Cuit ?? "-")</p>
     <p><strong>Grupo:</strong> @(Model.Acreditado.Grupo ?? "-")</p>
-    <p><strong>Habilitado:</strong> @(Model.Acreditado.Habilitado.HasValue ? (Model.Acreditado.Habilitado.Value ? "Sí" : "No") : "N/D")</p>
-    <p><strong>Alta:</strong> @(Model.Acreditado.Alta.HasValue ? (Model.Acreditado.Alta.Value ? "Sí" : "No") : "N/D")</p>
+    <p><strong>Habilitado:</strong> @(Model.Acreditado.Habilitado ? "Sí" : "No")</p>
+    <p><strong>Alta:</strong> @(Model.Acreditado.Alta ? "Sí" : "No")</p>
 </div>
