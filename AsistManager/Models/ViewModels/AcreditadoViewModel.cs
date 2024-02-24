@@ -24,8 +24,12 @@ namespace AsistManager.Models.ViewModels
 
         public string? Grupo { get; set; }
 
+        [Required(ErrorMessage = "El Habilitado es requerido")]
+        [Display(Name = "Habilitado")]
         public bool Habilitado { get; set; }
 
+        [Required(ErrorMessage = "El Alta es requerido")]
+        [Display(Name = "Alta")]
         public bool Alta { get; set; }
     }
 }
