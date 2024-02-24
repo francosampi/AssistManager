@@ -228,44 +228,20 @@ namespace AsistManager.Controllers
             return View(nameof(Index), evento);
         }
 
-        public FileResult ExportSheet(int id)
+        public IActionResult ExportSheet()
         {
-            try
+            //Obtener excel precargado, leerlo y descargarlo
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "xlsx", "registros.xlsx");
+
+            // Verificar si el archivo existe
+            if (!System.IO.File.Exists(filePath))
             {
-                DataTable dataTable = new DataTable("Registros");
-
-                dataTable.Columns.AddRange(
-                [
-                    new DataColumn("Nombre"),
-                    new DataColumn("Apellido"),
-                    new DataColumn("DNI"),
-                    new DataColumn("CUIT"),
-                    new DataColumn("Celular"),
-                    new DataColumn("Grupo"),
-                    new DataColumn("Habilitado"),
-                    new DataColumn("Alta")
-                ]);
-
-                using (XLWorkbook wb = new XLWorkbook())
-                {
-                    wb.Worksheets.Add(dataTable);
-
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        wb.SaveAs(stream);
-
-                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "registros.xlsx");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //Informar error
-                TempData["AlertaTipo"] = "danger";
-                TempData["AlertaMensaje"] = "Error al leer el archivo. (" + ex.Message + ")";
+                return NotFound();
             }
 
-            return File(new byte[0], "application/octet-stream");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "registros.xlsx");
         }
 
         public FileResult ExportAccredited(int id)
