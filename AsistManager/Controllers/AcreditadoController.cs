@@ -34,6 +34,7 @@ namespace AsistManager.Controllers
                 });
 
             ViewData["Evento"] = evento;
+            TempData["HuboEscaneo"] = false;
 
             //Si existe una búsqueda por filtro, devolver esa lista
             if (TempData["Filtro"] != null)
@@ -341,7 +342,6 @@ namespace AsistManager.Controllers
 
                 if (huboEscaneo.HasValue && huboEscaneo.Value)
                 {
-                    TempData["HuboEscaneo"] = false;
                     return RedirectToAction("Index", "Scan", new { id = acreditado.IdEvento });
                 }
 

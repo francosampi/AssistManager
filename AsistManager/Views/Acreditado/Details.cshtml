@@ -18,7 +18,7 @@
     <div class="card-body shadow-sm">
         <partial name="_AcreditadoDetails" model="Model" />
 
-        <div class="my-4">
+        <div class="m-4">
 
             <!--Verificar si existe ingreso e informar-->
             <h5>
@@ -65,61 +65,63 @@
         <div class="card-body">
             <div class="d-flex justify-content-around">
 
-                <form asp-action="Entry" asp-route-id="@Model.Acreditado.Id" method="post"
-                    class="d-flex justify-content-center align-items-center col">
+                <div class="btn-group">
+                    <form asp-action="Entry" asp-route-id="@Model.Acreditado.Id" method="post"
+                        class="d-flex justify-content-center align-items-center col">
 
-                    <!--Habilitar botón solo si no existe un ingreso-->
-                    <button type="submit"
-                        class="btn btn-info boton-grande shadow-sm"
-                        disabled="@(Model.Ingreso!=null)">
+                        <!--Habilitar botón solo si no existe un ingreso-->
+                        <button type="submit"
+                            class="btn btn-info boton-grande shadow-sm"
+                            disabled="@(Model.Ingreso!=null)">
 
-                        <span class="boton-grande-texto">
-                            <i class="bi-door-open"></i>
-                            Registrar Ingreso
-                        </span>
-                    </button>
-                </form>
+                            <span class="boton-grande-texto">
+                                <i class="bi-door-open"></i>
+                                Registrar Ingreso
+                            </span>
+                        </button>
+                    </form>
 
-                <form asp-action="Exit" asp-route-id="@Model.Acreditado.Id" method="post"
-                    class="d-flex justify-content-center align-items-center col">
+                    <form asp-action="Exit" asp-route-id="@Model.Acreditado.Id" method="post"
+                        class="d-flex justify-content-center align-items-center col">
 
-                    <!--Habilitar botón solo si existe un ingreso y no existe un egreso-->
-                    <button type="submit"
-                        class="btn btn-dark boton-grande shadow-sm"
-                        disabled="@(Model.Ingreso == null || Model.Egreso != null)">
+                        <!--Habilitar botón solo si existe un ingreso y no existe un egreso-->
+                        <button type="submit"
+                            class="btn btn-dark boton-grande shadow-sm"
+                            disabled="@(Model.Ingreso == null || Model.Egreso != null)">
 
-                        <span class="boton-grande-texto">
-                            <i class="bi-door-open"></i>
-                            Registrar Egreso
-                        </span>
-                    </button>
-                </form>
+                            <span class="boton-grande-texto">
+                                <i class="bi-door-open"></i>
+                                Registrar Egreso
+                            </span>
+                        </button>
+                    </form>
 
-                <form asp-action="Update" asp-route-id="@Model.Acreditado.Id" method="get"
-                      class="d-flex justify-content-center align-items-center col">
+                    <form asp-action="Update" asp-route-id="@Model.Acreditado.Id" method="get"
+                          class="d-flex justify-content-center align-items-center col">
 
-                    <button type="submit"
-                            class="btn btn-warning boton-grande shadow-sm">
+                        <button type="submit"
+                                class="btn btn-warning boton-grande shadow-sm">
 
-                        <span class="boton-grande-texto">
-                            <i class="bi-pencil-square"></i>
-                            Editar registro
-                        </span>
-                    </button>
-                </form>
+                            <span class="boton-grande-texto">
+                                <i class="bi-pencil-square"></i>
+                                Editar registro
+                            </span>
+                        </button>
+                    </form>
 
-                <form asp-action="Delete" asp-route-id="@Model.Acreditado.Id" method="get"
-                      class="d-flex justify-content-center align-items-center col">
+                    <form asp-action="Delete" asp-route-id="@Model.Acreditado.Id" method="get"
+                          class="d-flex justify-content-center align-items-center col">
 
-                    <button type="submit"
-                            class="btn btn-danger boton-grande shadow-sm">
+                        <button type="submit"
+                                class="btn btn-danger boton-grande shadow-sm">
 
-                        <span class="boton-grande-texto">
-                            <i class="bi-trash"></i>
-                            Borrar registro
-                        </span>
-                    </button>
-                </form>
+                            <span class="boton-grande-texto">
+                                <i class="bi-trash"></i>
+                                Borrar registro
+                            </span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -8,16 +8,16 @@
 <table class="table table-hover table-responsive tabla-registros mt-4">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>DNI</th>
-            <th>CUIT</th>
-            <th>Celular</th>
-            <th>Grupo</th>
-            <th>Habilitado</th>
-            <th>Alta</th>
-            <th>Ingreso</th>
-            <th>Egreso</th>
+            <th class="sortable" data-column="Nombre">Nombre</th>
+            <th class="sortable" data-column="Apellido">Apellido</th>
+            <th class="sortable" data-column="Dni">DNI</th>
+            <th class="sortable" data-column="Cuit">CUIT</th>
+            <th class="sortable" data-column="Celular">Celular</th>
+            <th class="sortable" data-column="Grupo">Grupo</th>
+            <th class="sortable" data-column="Habilitado">Habilitado</th>
+            <th class="sortable" data-column="Alta">Alta</th>
+            <th class="sortable" data-column="Ingreso">Ingreso</th>
+            <th class="sortable" data-column="Egreso">Egreso</th>
             <th></th>
         </tr>
     </thead>
@@ -43,13 +43,13 @@
                 <!--Operaciones disponibles-->
                 <td>
                     <div class="d-inline-flex">
-                        <a class="btn btn-info" asp-action="Details" asp-route-id="@registro.Acreditado.IdEvento" asp-route-dni="@registro.Acreditado.Dni">
+                        <a class="btn btn-info shadow-sm" asp-action="Details" asp-route-id="@registro.Acreditado.IdEvento" asp-route-dni="@registro.Acreditado.Dni">
                             <i class="bi-list-check"></i>
                         </a>
-                        <a class="btn btn-warning" asp-action="Update" asp-route-id="@registro.Acreditado.Id">
+                        <a class="btn btn-warning shadow-sm" asp-action="Update" asp-route-id="@registro.Acreditado.Id">
                             <i class="bi-pencil"></i>
                         </a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@registro.Acreditado.Id">
+                        <a class="btn btn-danger shadow-sm" asp-action="Delete" asp-route-id="@registro.Acreditado.Id">
                             <i class="bi-trash"></i>
                         </a>
                     </div>
