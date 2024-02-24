@@ -86,7 +86,7 @@ namespace AsistManager.Controllers
                                     }
 
                                     //Por cada registro, generar un objeto
-                                    Acreditado acreditado = Utilities.LeerFilaExcelAcreditado(reader);
+                                    var acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
                                     if (acreditado.Dni == null)
                                     {
@@ -203,8 +203,8 @@ namespace AsistManager.Controllers
                             await _context.SaveChangesAsync();
 
                             //Informar lo acontecido (registros insertado y alertas)
-                            string mensajeRegistros = "Se han insertado los <b>" + registros.Count + " registro(s)</b> de los " + contadorRegistros + " correctamente. <br><hr/>";
-                            string mensajeAlerta = contadorAlertas > 0 ? "Hay <b>" + contadorAlertas + " registro(s)</b> con campos vacíos sin insertar." : "";
+                            string mensajeRegistros = "Se han insertado los <b>" + registros.Count + " registro(s)</b> de los " + contadorRegistros + " correctamente.";
+                            string mensajeAlerta = contadorAlertas > 0 ? "<br><hr/> Hay <b>" + contadorAlertas + " registro(s)</b> con campos vacíos sin insertar." : "";
 
                             if (contadorRegistros == 0)
                             {
