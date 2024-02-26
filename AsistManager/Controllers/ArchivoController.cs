@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace AsistManager.Controllers
 {
@@ -19,7 +20,7 @@ namespace AsistManager.Controllers
             _context = context;
         }
 
-        //Ir a vista para importar datos del Evento
+        //Ir a vista para importar/exportar datos del Evento
         public IActionResult Index(int id)
         {
             var evento = _context.Eventos.Find(id);
@@ -34,12 +35,9 @@ namespace AsistManager.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        //Subir el excel de la base y leer registros
-        public async Task<IActionResult> Read(int id, IFormFile file)
+        //Leer registros del excel subido
+        public IActionResult Read([FromForm] IFormFile file)
         {
-            var evento = _context.Eventos.Find(id);
-
             //Manejo de la codificación de caracteres específicos durante la lectura del archivo
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -60,7 +58,7 @@ namespace AsistManager.Controllers
 
                 using(var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                    file.CopyTo(stream);
                 }
 
                 //Abrir archivo y leerlo linea por linea
@@ -86,9 +84,13 @@ namespace AsistManager.Controllers
                                     }
 
                                     //Por cada registro, generar un objeto
-                                    var acreditado = Utilities.LeerFilaExcelAcreditado(reader);
+                                    Acreditado acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
-                                    if (acreditado.Dni == null)
+                                    //Verificar si alguno de los campos requeridos está vacío
+                                    if (string.IsNullOrWhiteSpace(acreditado.Nombre) ||
+                                        string.IsNullOrWhiteSpace(acreditado.Apellido) ||
+                                        string.IsNullOrWhiteSpace(acreditado.Dni) ||
+                                        string.IsNullOrWhiteSpace(acreditado.Cuit))
                                     {
                                         contadorAlertas++;
                                     }
@@ -98,31 +100,16 @@ namespace AsistManager.Controllers
                             } while (reader.NextResult());
 
                             contadorRegistros = registros.Count;
-
-                            //Informar lo acontecido (registros leídos y alertas)
-                            string mensajeRegistros = "Se han leído los <b>" + contadorRegistros + " registro(s)</b> correctamente. ";
-                            string mensajeAlerta = contadorAlertas>0 ? "Hay <b>" +contadorAlertas + " alerta(s)</b>." : "";
-
-                            if (contadorRegistros == 0)
-                            {
-                                mensajeRegistros = "Este archivo se encuentra vacío.";
-                                TempData["AlertaTipo"] = "warning";
-                            }
-
-                            ViewData["Registros"] = registros;
-                            TempData["AlertaMensaje"] = mensajeRegistros+mensajeAlerta;
                         }
                     }
                     catch (Exception ex)
                     {
-                        //Informar error
-                        TempData["AlertaTipo"] = "danger";
-                        TempData["AlertaMensaje"] = "Error al leer el archivo. ("+ex.Message+")";
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
 
-            return View(nameof(Index), evento);
+            return StatusCode(StatusCodes.Status200OK, registros);
         }
 
         [HttpPost]
@@ -180,22 +167,26 @@ namespace AsistManager.Controllers
                                     //Por cada registro, generar un objeto
                                     Acreditado? acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
-                                    if(acreditado!=null)
+                                    //Verificar si alguno de los campos requeridos está vacío
+                                    if (string.IsNullOrWhiteSpace(acreditado.Nombre) ||
+                                        string.IsNullOrWhiteSpace(acreditado.Apellido) ||
+                                        string.IsNullOrWhiteSpace(acreditado.Dni) ||
+                                        string.IsNullOrWhiteSpace(acreditado.Cuit))
+                                    {
+                                        contadorAlertas++;
+                                    }
+                                    else
                                     {
                                         //Asigno el ID del Evento correspondiente
                                         acreditado.IdEvento = id;
 
                                         //Insertar registro en la base
                                         _context.Acreditados.Add(acreditado);
-
-                                        registros.Add(acreditado);
-                                    }
-                                    else
-                                    {
-                                        contadorAlertas++;
+                                        contadorRegistros++;
                                     }
 
-                                    contadorRegistros++;
+                                    registros.Add(acreditado);
+                                    
                                 }
                             } while (reader.NextResult());
 
@@ -203,7 +194,7 @@ namespace AsistManager.Controllers
                             await _context.SaveChangesAsync();
 
                             //Informar lo acontecido (registros insertado y alertas)
-                            string mensajeRegistros = "Se han insertado los <b>" + registros.Count + " registro(s)</b> de los " + contadorRegistros + " correctamente.";
+                            string mensajeRegistros = "Se han insertado los <b>" + contadorRegistros + " registro(s)</b> de los " + registros.Count + " correctamente.";
                             string mensajeAlerta = contadorAlertas > 0 ? "<br><hr/> Hay <b>" + contadorAlertas + " registro(s)</b> con campos vacíos sin insertar." : "";
 
                             if (contadorRegistros == 0)
@@ -233,7 +224,7 @@ namespace AsistManager.Controllers
             //Obtener excel precargado, leerlo y descargarlo
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "xlsx", "registros.xlsx");
 
-            // Verificar si el archivo existe
+            //Verificar si el archivo existe
             if (!System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -267,7 +258,7 @@ namespace AsistManager.Controllers
                 var acreditados = _context.Acreditados
                     .Where(a => a.IdEvento == id);
 
-                // Agregar los datos de los acreditados a la tabla de datos
+                //Agregar los datos de los acreditados a la tabla de datos
                 foreach (var acreditado in acreditados)
                 {
                     dataTable.Rows.Add(

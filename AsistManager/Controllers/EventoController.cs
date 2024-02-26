@@ -176,13 +176,23 @@ namespace AsistManager.Controllers
         //Ir a vista para borrar Evento
         public IActionResult Delete(int id)
         {
-            var evento = _context.Eventos.Find(id);
+            //Hago Select del Evento e incluyo en la consulta tanto sus acreditados como sus ingresos y egresos
+            var evento = _context.Eventos
+                .Include(e => e.Acreditados)
+                    .ThenInclude(a => a.Ingresos)
+                .Include(e => e.Acreditados)
+                    .ThenInclude(a => a.Egresos)
+                .FirstOrDefault(e => e.Id == id);
 
             //Verificar si el evento existe
             if (evento == null)
             {
                 return NotFound();
             }
+
+            ViewData["AcreditadosABorrar"] = evento.Acreditados.Count();
+            ViewData["IngresosABorrar"] = evento.Acreditados.Sum(a => a.Ingresos.Count());
+            ViewData["EgresosABorrar"] = evento.Acreditados.Sum(a => a.Egresos.Count());
 
             return View(evento);
         }
@@ -205,7 +215,6 @@ namespace AsistManager.Controllers
             {
                 //Obtener los acreditados del evento y la cantidad a borrar
                 var acreditados = evento.Acreditados;
-                int cantidadAcreditados = acreditados.ToList().Count();
 
                 //Eliminar los ingresos y egresos del acreditado
                 foreach (var acreditado in acreditados)
@@ -221,7 +230,7 @@ namespace AsistManager.Controllers
                 _context.SaveChanges();
 
                 //Redireccionar al Index y mostrar alerta
-                TempData["AlertaMensaje"] = $"El evento '<b>{evento.Nombre}</b>' y sus <b>{cantidadAcreditados}</b> acreditados se eliminaron exitosamente.";
+                TempData["AlertaMensaje"] = $"El evento '<b>{evento.Nombre}</b>' y su información fue eliminada exitosamente.";
 
                 return RedirectToAction(nameof(Index));
             }

@@ -1,5 +1,6 @@
 ﻿using AsistManager.Models;
 using ExcelDataReader;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text;
 
@@ -50,22 +51,17 @@ namespace AsistManager.Helpers
             return filter;
         }
 
-        public static Acreditado? LeerFilaExcelAcreditado(IExcelDataReader reader)
+        public static Acreditado LeerFilaExcelAcreditado(IExcelDataReader reader)
         {
             //Leer los valores de las celdas
             string nombre = reader.GetValue(0)?.ToString() ?? "";
             string apellido = reader.GetValue(1)?.ToString() ?? "";
             string dni = reader.GetValue(2)?.ToString() ?? "";
             string cuit = reader.GetValue(3)?.ToString() ?? "";
-
-            //Verificar si alguno de los campos requeridos está vacío
-            if (string.IsNullOrWhiteSpace(nombre) ||
-                string.IsNullOrWhiteSpace(apellido) ||
-                string.IsNullOrWhiteSpace(dni) ||
-                string.IsNullOrWhiteSpace(cuit))
-            {
-                return null;
-            }
+            string celular = reader.GetValue(4)?.ToString() ?? "";
+            string grupo = reader.GetValue(5)?.ToString() ?? "";
+            bool habilitado = Utilities.EsCampoVerdadero(reader.GetValue(6)?.ToString() ?? "");
+            bool alta = Utilities.EsCampoVerdadero(reader.GetValue(7)?.ToString() ?? "");
 
             //Crear una instancia si todos los campos requeridos tienen valor
             return new Acreditado
@@ -74,10 +70,10 @@ namespace AsistManager.Helpers
                 Apellido = apellido,
                 Dni = dni,
                 Cuit = cuit,
-                Celular = reader.GetValue(4)?.ToString() ?? "",
-                Grupo = reader.GetValue(5)?.ToString() ?? "",
-                Habilitado = Utilities.EsCampoVerdadero(reader.GetValue(6)?.ToString() ?? ""),
-                Alta = Utilities.EsCampoVerdadero(reader.GetValue(7)?.ToString() ?? "")
+                Celular = celular,
+                Grupo = grupo,
+                Habilitado = habilitado,
+                Alta = alta
             };
         }
     }

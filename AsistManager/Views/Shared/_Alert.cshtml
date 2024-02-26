@@ -7,7 +7,7 @@
     }
 
     <div class="my-4">
-        <div class="alert alert-@TempData["AlertaTipo"] alert-dismissible fade show shadow-sm" role="alert">
+        <div id="alerta" class="alert alert-@TempData["AlertaTipo"] alert-dismissible fade show shadow-sm" role="alert">
             <label>
                 <i class="bi-exclamation-circle p-1"></i>
                 @Html.Raw(TempData["AlertaMensaje"])

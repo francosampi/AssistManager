@@ -20,7 +20,6 @@
         @foreach (var registro in Model)
         {
             int errores = 0;
-            bool errorCritico = false;
             string[] errorInfo = { };
             string estiloRow = "";
 
@@ -28,11 +27,10 @@
             List<string> propiedades = new List<string> { registro.Dni, registro.Nombre, registro.Apellido, registro.Cuit };
 
             errores += propiedades.Count(prop => string.IsNullOrEmpty(prop));
-            errorCritico = errores > 0 && string.IsNullOrEmpty(registro.Dni);
 
             @if (errores > 0)
             {
-                estiloRow = errorCritico ? "bg-danger text-white" : "bg-warning";
+                estiloRow = "bg-warning";
             }
 
             <tr class=@estiloRow>
@@ -47,18 +45,13 @@
                 <td>
                     @if (errores > 0)
                     {
-                        if (errorCritico)
-                        {
-                            <i class="bi bi-exclamation-circle text-white"></i>
-                        }
-                        else
-                        {
-                            <i class="bi bi-exclamation-circle text-white"></i>
-                        }
+                        <i class="bi bi-exclamation-circle text-danger"></i>
+                        <span class="text-danger fw-bold">Sin insertar</span>
                     }
                     else
                     {
-                        <i class="bi bi-check-circle text-success"></i>
+                        <i class="bi bi-check-circle"></i>
+                        <span class="text-success fw-bold">Insertado</span>
                     }
                 </td>
             </tr>

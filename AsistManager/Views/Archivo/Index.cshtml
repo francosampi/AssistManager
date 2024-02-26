@@ -33,7 +33,7 @@
 
                             <!--Exportar molde de Excel para su modificación-->
                             <button id="exportButton" type="submit" asp-controller="Archivo" asp-action="ExportSheet"
-                                    class="btn btn-outline-dark btn-lg">
+                                    class="btn btn-outline-info btn-lg">
                                 Exportar molde
                                 <i class="bi bi-file"></i>
                             </button>
@@ -42,14 +42,20 @@
                             <label class="btn btn-outline-dark btn-lg">
                                 <input id="fileInput" type="file" name="file" onchange="alCargarArchivo()">
                                 Importar archivo
-                                <i class="bi bi-file-arrow-down"></i>
+                                <i class="bi bi-file-arrow-up"></i>
                             </label>
-                    
-                            <hr />
 
+                            <!--Consultar registros antes de insertar en base
+                            <button id="showButton" type="button"
+                                class="btn btn-outline-warning btn-lg">
+                                Consultar registros
+                                <i class="bi bi-file-check"></i>
+                            </button>
+                            -->
+                    
                             <!--Insertar registros del archivo a la base-->
                             <button id="insertButton" type="submit" asp-controller="Archivo" asp-action="Insert"
-                                    class="btn btn-outline-success btn-lg" disabled>
+                                class="btn btn-outline-success btn-lg" disabled>
                                 Insertar registros
                                 <i class="bi bi-database-add"></i>
                             </button>
@@ -57,22 +63,13 @@
                             <!--Exportar archico de Excel con todos los acreditados del evento-->
                             <div>
                                 <button id="exportButton" type="submit" asp-controller="Archivo" asp-action="ExportAccredited"
-                                        class="btn btn-outline-success btn-lg">
+                                        class="btn btn-outline-warning btn-lg">
                                     Exportar registros
-                                    <i class="bi bi-file-arrow-up"></i>
+                                    <i class="bi bi-file-arrow-down"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    <!--Previsualizar registros del archivo importado-->
-                    <!--
-                        <button id="showButton" type="submit" asp-controller="Archivo" asp-action="Read"
-                            class="btn btn-outline-dark btn-lg" disabled>
-                            Consultar registros
-                            <i class="bi bi-file-check"></i>
-                        </button>
-                    -->
                 </div>
             </form>
 
@@ -82,23 +79,121 @@
                 var listaRegistros = ViewBag.Registros as List<Acreditado>;
 
                 <div class="mt-4">
+
                     <hr />
+
+                    <h4>Últimos registros insertados</h4>
+
                     <!--Informar cantidad de acreditados-->
-                    @if (listaRegistros!.Count == 0)
-                    {
-                        <label class="fw-bold text-danger">No se han encontrado registros.</label>
-                    }
-                    else
-                    {
-                        <label class="fw-bold text-secondary">Mostrando @listaRegistros!.Count registro(s)</label>
-                    }
+                    <div class="mt-3">
+                        @if (listaRegistros!.Count == 0)
+                        {
+                            <label class="fw-bold text-danger">No se han encontrado registros.</label>
+                        }
+                        else
+                        {
+                            <label class="fw-bold text-secondary">Mostrando @listaRegistros!.Count registro(s)</label>
+                        }
+                    </div>
 
                     <!--Tabla de registros-->
                     <partial name="_TablaAcreditados" model="listaRegistros" />
-                </div>   
+                </div>
             }
+            
+            <div class="mt-4">
+                <div class="text-warning my-2">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span id="tabla-registros-alcargar-advert" class="fw-bold">
+                        Cuidado: Revisar los registros antes de insertarlos.
+                    </span>
+                </div>
+                <table id="tabla-registros-alcargar" class="table table-striped w-100 my-4">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>DNI</th>
+                            <th>CUIT</th>
+                            <th>Celular</th>
+                            <th>Grupo</th>
+                            <th>Habilitado</th>
+                            <th>Alta</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            
         </div>
     </div>
 </fieldset>
 
-<script src="~/js/importarArchivo.js"></script>
+@section Scripts{
+    <script>
+        function alCargarArchivo() {
+            const inputBtn = document.getElementById("fileInput");
+            const insertBtn = document.getElementById("insertButton");
+            const tablaRegistros = document.getElementById("tabla-registros-alcargar");
+
+            const formData = new FormData();
+
+            function toggleInsertButtonAndTable() {
+                insertBtn.disabled = !inputBtn.files || inputBtn.files.length === 0;
+            }
+
+            inputBtn.addEventListener("change", toggleInsertButtonAndTable);
+
+            toggleInsertButtonAndTable();
+
+            formData.append("file", inputBtn.files[0]);
+
+            //Hacer petición al Read para devolver los registros del excel en JSON
+            fetch("/Archivo/Read", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ocurrió un problema al procesar el archivo.');
+                }
+
+                return response.json();
+            })
+            .then(dataJson => {
+
+                @(ViewData["Registros"]=null);
+
+                //Si la petición fue correcta, mostrar la tabla
+                dataJson.forEach((registro) => {
+
+                    //Crear fila y darle estilo según corresponda y agregarla
+                    const $fila = $("<tr>");
+
+                    $fila.append(
+                        $("<td>").text(registro.nombre),
+                        $("<td>").text(registro.apellido),
+                        $("<td>").text(registro.dni),
+                        $("<td>").text(registro.cuit),
+                        $("<td>").text(registro.celular),
+                        $("<td>").text(registro.grupo),
+                        $("<td>").text(registro.habilitado == true ? "Sí" : "No"),
+                        $("<td>").text(registro.alta== true ? "Sí" : "No"),
+                    );
+
+                    if (!registro.nombre || !registro.apellido || !registro.dni || !registro.cuit) {
+                        $fila.addClass("bg-warning");
+                    }
+
+                    $("#tabla-registros-alcargar tbody").append($fila);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+}

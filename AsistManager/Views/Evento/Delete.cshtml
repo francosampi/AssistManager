@@ -14,13 +14,67 @@
             <!--Form para borrar el evento seleccionado-->
             <form asp-action="Delete" method="post">
 
-                <p class="fw-bold">Se borrarán tanto los registros como sus ingresos y egresos.</p>
+                <div>
+                    <h2 class="text-danger mb-4"></i> ¡Atención!</h2>
+                    <div>
+                        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                        Al borrar este evento, se eliminarán <b>todos los datos relacionados con él, incluyendo los acreditados asociados, así como sus registros de ingresos y egresos.</b>
+                    </div>
+                    <br />
 
-                <!--Botones para borrar evento o ir atrás-->
+                    <div class="mt-3">
+                        <b class="text-muted">
+                            Los siguientes datos se perderán:
+                        </b>
+
+                        <div class="mt-2">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i>
+                                        Nombre del evento: <b>@Model.Nombre</b>
+                                    </i>
+                                </li>
+                                <li class="list-group-item">
+                                    <i>
+                                        Fecha del evento: <b>@Model.FechaInicio</b>
+                                    </i>
+                                </li>
+
+                                @{
+                                    var elementos = new Dictionary<string, int>()
+                                    {
+                                        { "acreditado(s)", (int)ViewData["AcreditadosABorrar"] },
+                                        { "ingreso(s)", (int)ViewData["IngresosABorrar"] },
+                                        { "egreso(s)", (int)ViewData["EgresosABorrar"] }
+                                    };
+                                }
+
+                                @foreach (var item in elementos)
+                                {
+                                    if (item.Value > 0)
+                                    {
+                                        <li class="list-group-item">
+                                            <i>
+                                                <b>@item.Value</b> @item.Key asociado(s).
+                                            </i>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
+                    <b>
+                        Esta acción es irreversible. ¿Estás seguro de que deseas continuar?
+                    </b>
+                </div>
+
+                <!--Dirige a acción POST 'Delete' del controlador-->
                 <div class="form-group mt-3 d-flex flex-row justify-content-between">
-
-                    <!--Dirige a acción POST 'Delete' del controlador-->
-                    <input type="submit" value="Borrar evento" class="btn btn-danger mt-4 w-100" />
+                    <button type="submit" class="btn btn-danger mt-4 w-100">
+                        <i class="bi bi-trash"></i>
+                        Borrar evento
+                    </button>
                 </div>
             </form>
         </div>
