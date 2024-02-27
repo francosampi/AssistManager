@@ -15,8 +15,10 @@ builder.Services.AddAuthentication(
 
 builder.Services.AddDbContext<AsistManagerContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AsistManagerContext"));
+    options.UseMySql(builder.Configuration.GetConnectionString("AsistManagerContext"),
+                     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("AsistManagerContext")));
 });
+
 
 var app = builder.Build();
 
