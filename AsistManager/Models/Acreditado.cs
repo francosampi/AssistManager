@@ -9,13 +9,13 @@ public partial class Acreditado
 
     public int? IdEvento { get; set; }
 
-    public string Nombre { get; set; } = null!;
+    public string? Nombre { get; set; }
 
-    public string Apellido { get; set; } = null!;
+    public string? Apellido { get; set; }
 
-    public string Dni { get; set; } = null!;
+    public string? Dni { get; set; }
 
-    public string Cuit { get; set; } = null!;
+    public string? Cuit { get; set; }
 
     public bool Habilitado { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace AsistManager.Models;
 
@@ -25,89 +26,131 @@ public partial class AsistManagerContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder
+            .UseCollation("utf8mb4_general_ci")
+            .HasCharSet("utf8mb4");
+
         modelBuilder.Entity<Acreditado>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__acredita__3213E83F7B56F3CE");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("acreditado");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Alta).HasColumnName("alta");
+            entity.HasIndex(e => e.IdEvento, "id_evento");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.Alta)
+                .HasColumnType("bit(1)")
+                .HasColumnName("alta");
             entity.Property(e => e.Apellido)
                 .HasMaxLength(51)
-                .HasColumnName("apellido");
+                .HasColumnName("apellido")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
             entity.Property(e => e.Celular)
                 .HasMaxLength(51)
-                .HasColumnName("celular");
+                .HasColumnName("celular")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
             entity.Property(e => e.Cuit)
                 .HasMaxLength(51)
-                .HasColumnName("CUIT");
+                .HasColumnName("CUIT")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
             entity.Property(e => e.Dni)
                 .HasMaxLength(51)
-                .HasColumnName("DNI");
+                .HasColumnName("DNI")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
             entity.Property(e => e.Grupo)
                 .HasMaxLength(51)
-                .HasColumnName("grupo");
-            entity.Property(e => e.Habilitado).HasColumnName("habilitado");
-            entity.Property(e => e.IdEvento).HasColumnName("id_evento");
+                .HasColumnName("grupo")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
+            entity.Property(e => e.Habilitado)
+                .HasColumnType("bit(1)")
+                .HasColumnName("habilitado");
+            entity.Property(e => e.IdEvento)
+                .HasColumnType("int(11)")
+                .HasColumnName("id_evento");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(51)
-                .HasColumnName("nombre");
+                .HasColumnName("nombre")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
 
             entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.Acreditados)
                 .HasForeignKey(d => d.IdEvento)
-                .HasConstraintName("FK__acreditad__id_ev__45F365D3");
+                .HasConstraintName("acreditado_ibfk_1");
         });
 
         modelBuilder.Entity<Egreso>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__egreso__3213E83F90409F4C");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("egreso");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.HasIndex(e => e.IdAcreditado, "id_acreditado");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
             entity.Property(e => e.FechaOperacion)
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_operacion");
-            entity.Property(e => e.IdAcreditado).HasColumnName("id_acreditado");
+            entity.Property(e => e.IdAcreditado)
+                .HasColumnType("int(11)")
+                .HasColumnName("id_acreditado");
 
             entity.HasOne(d => d.IdAcreditadoNavigation).WithMany(p => p.Egresos)
                 .HasForeignKey(d => d.IdAcreditado)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__egreso__id_acred__5CD6CB2B");
+                .HasConstraintName("egreso_ibfk_1");
         });
 
         modelBuilder.Entity<Evento>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__evento__3213E83F4B52FAD5");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("evento");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
             entity.Property(e => e.FechaInicio)
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_inicio");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(255)
-                .HasColumnName("nombre");
+                .HasColumnName("nombre")
+                .UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
         });
 
         modelBuilder.Entity<Ingreso>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ingreso__3213E83FDFE0EA72");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("ingreso");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.HasIndex(e => e.IdAcreditado, "id_acreditado");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
             entity.Property(e => e.FechaOperacion)
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_operacion");
-            entity.Property(e => e.IdAcreditado).HasColumnName("id_acreditado");
+            entity.Property(e => e.IdAcreditado)
+                .HasColumnType("int(11)")
+                .HasColumnName("id_acreditado");
 
             entity.HasOne(d => d.IdAcreditadoNavigation).WithMany(p => p.Ingresos)
                 .HasForeignKey(d => d.IdAcreditado)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ingreso__id_acre__5070F446");
+                .HasConstraintName("ingreso_ibfk_1");
         });
 
         OnModelCreatingPartial(modelBuilder);
