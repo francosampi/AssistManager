@@ -8,12 +8,12 @@ namespace AsistManager.Helpers
 {
     public static class Utilities
     {
-        //Verificar si un campo es true o false o no
+        //Verificar si un campo es true o false
         public static bool EsCampoVerdadero(string valor)
         {
             valor = valor.ToLower();
 
-            if (valor == "si" || valor == "sí")
+            if (valor == "si" || valor == "sí" || valor=="s")
             {
                 return true;
             }
