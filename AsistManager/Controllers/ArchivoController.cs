@@ -7,6 +7,7 @@ using System.Data;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.EntityFrameworkCore;
 
 namespace AsistManager.Controllers
 {
@@ -250,15 +251,41 @@ namespace AsistManager.Controllers
                     new DataColumn("Celular"),
                     new DataColumn("Grupo"),
                     new DataColumn("Habilitado"),
-                    new DataColumn("Alta")
+                    new DataColumn("Alta"),
+                    new DataColumn("Fecha de Ingreso"),
+                    new DataColumn("Hora de Ingreso"),
+                    new DataColumn("Fecha de Egreso"),
+                    new DataColumn("Hora de Egreso"),
                 ]);
 
                 var acreditados = _context.Acreditados
+                    .Include(a => a.Ingresos)
+                    .Include(a => a.Egresos)
                     .Where(a => a.IdEvento == id);
 
                 //Agregar los datos de los acreditados a la tabla de datos
                 foreach (var acreditado in acreditados)
                 {
+                    //Obtener la fecha y hora de ingreso
+                    string fechaIngreso = "-";
+                    string horaIngreso = "-";
+                    if (acreditado.Ingresos.Any())
+                    {
+                        var primerIngreso = acreditado.Ingresos.First();
+                        fechaIngreso = primerIngreso.FechaOperacion.ToString("dd/MM/yyyy");
+                        horaIngreso = primerIngreso.FechaOperacion.ToString("HH:mm:ss");
+                    }
+
+                    //Obtener la fecha y hora de egreso
+                    string fechaEgreso = "-";
+                    string horaEgreso = "-";
+                    if (acreditado.Egresos.Any())
+                    {
+                        var primerEgreso = acreditado.Egresos.First();
+                        fechaEgreso = primerEgreso.FechaOperacion.ToString("dd/MM/yyyy");
+                        horaEgreso = primerEgreso.FechaOperacion.ToString("HH:mm:ss");
+                    }
+
                     dataTable.Rows.Add(
                         acreditado.Nombre,
                         acreditado.Apellido,
@@ -267,7 +294,11 @@ namespace AsistManager.Controllers
                         acreditado.Celular,
                         acreditado.Grupo,
                         acreditado.Habilitado ? "Sí" : "No",
-                        acreditado.Alta ? "Sí" : "No"
+                        acreditado.Alta ? "Sí" : "No",
+                        fechaIngreso,
+                        horaIngreso,
+                        fechaEgreso,
+                        horaEgreso
                     );
                 }
 

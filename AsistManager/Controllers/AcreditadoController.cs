@@ -108,6 +108,20 @@ namespace AsistManager.Controllers
         //Crear un acreditado nuevo
         public async Task<IActionResult> Create(AcreditadoViewModel model, int id)
         {
+            var evento = _context.Eventos.Find(id);
+
+            //Verificar si no existe un acreditado con ese DNI actualmente
+            var existingAcreditado = await _context.Acreditados.FirstOrDefaultAsync(a => a.Dni == model.Dni);
+
+            if (existingAcreditado != null)
+            {
+                TempData["AlertaTipo"] = "danger";
+                TempData["AlertaMensaje"] = $"Ya se encuentra un registro con el DNI: '<b>{model.Dni}</b>' en acreditados.";
+                ViewData["Evento"] = evento;
+
+                return View(model);
+            }
+
             //Verifico si el modelo pasado desde la vista es válido (validaciones de campos)
             if (ModelState.IsValid)
             {
