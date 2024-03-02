@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 
 namespace AsistManager.Controllers
 {
@@ -150,6 +151,7 @@ namespace AsistManager.Controllers
                         {
                             int contadorRegistros = 0;
                             int contadorAlertas = 0;
+                            List<string> contadorRepetidos = new List<string>();
                             bool flagHeader = false;
 
                             do
@@ -166,6 +168,8 @@ namespace AsistManager.Controllers
                                     //Por cada registro, generar un objeto
                                     Acreditado? acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
+                                    var existingAcreditado = await _context.Acreditados.FirstOrDefaultAsync(a => a.Dni == acreditado.Dni);
+
                                     //Verificar si alguno de los campos requeridos está vacío
                                     if (string.IsNullOrWhiteSpace(acreditado.Nombre) ||
                                         string.IsNullOrWhiteSpace(acreditado.Apellido) ||
@@ -176,16 +180,23 @@ namespace AsistManager.Controllers
                                     }
                                     else
                                     {
-                                        //Asigno el ID del Evento correspondiente
-                                        acreditado.IdEvento = id;
+                                        if (existingAcreditado != null)
+                                        {
+                                            contadorRepetidos.Add(acreditado.Dni);
+                                        }
+                                        else
+                                        {
+                                            //Asigno el ID del Evento correspondiente
+                                            acreditado.IdEvento = id;
 
-                                        //Insertar registro en la base
-                                        _context.Acreditados.Add(acreditado);
-                                        contadorRegistros++;
+                                            //Insertar registro en la base
+                                            _context.Acreditados.Add(acreditado);
+                                            contadorRegistros++;
+                                        }
                                     }
 
+                                    //Agrego el registro en la lista de vista previa
                                     registros.Add(acreditado);
-                                    
                                 }
                             } while (reader.NextResult());
 
@@ -194,16 +205,34 @@ namespace AsistManager.Controllers
 
                             //Informar lo acontecido (registros insertado y alertas)
                             string mensajeRegistros = "Se han insertado los <b>" + contadorRegistros + " registro(s)</b> de los " + registros.Count + " correctamente.";
-                            string mensajeAlerta = contadorAlertas > 0 ? "<br><hr/> Hay <b>" + contadorAlertas + " registro(s)</b> con campos vacíos sin insertar." : "";
+                            
+                            //Informar registros con campos vacíos
+                            string mensajeAlerta = contadorAlertas > 0 ? "<br><hr/> Se encontraron <b>" + contadorAlertas + " registro(s)</b> con campos obligatorios vacíos." : "";
 
-                            if (contadorRegistros == 0)
+                            //Informar registros con DNI repetidos
+                            string mensajeRepetidos = "";
+
+                            if (contadorRepetidos.Count > 0)
                             {
-                                mensajeRegistros = "Este archivo se encuentra vacío.";
-                                TempData["AlertaTipo"] = "warning";
+                                //Informar registros con DNI repetidos
+                                StringBuilder listaRepetidos = new StringBuilder();
+
+                                foreach (var dni in contadorRepetidos)
+                                {
+                                    listaRepetidos.Append("<li>" + dni + "</li>");
+                                }
+
+                                mensajeRepetidos = "<br><hr/> Se encontraron <b>" + contadorRepetidos.Count + " registro(s)</b> con un DNI ya insertado en base: <ul>" + listaRepetidos.ToString() + "</ul>";
+
+                                if (registros.Count == 0)
+                                {
+                                    mensajeRegistros = "Este archivo se encuentra vacío.";
+                                    TempData["AlertaTipo"] = "warning";
+                                }
                             }
 
                             ViewData["Registros"] = registros;
-                            TempData["AlertaMensaje"] = mensajeRegistros + mensajeAlerta;
+                            TempData["AlertaMensaje"] = mensajeRegistros + mensajeAlerta + mensajeRepetidos;
                         }
                     }
                     catch (Exception ex)
@@ -266,42 +295,10 @@ namespace AsistManager.Controllers
                 //Agregar los datos de los acreditados a la tabla de datos
                 foreach (var acreditado in acreditados)
                 {
-                    //Obtener la fecha y hora de ingreso
-                    string fechaIngreso = "-";
-                    string horaIngreso = "-";
-                    if (acreditado.Ingresos.Any())
-                    {
-                        var primerIngreso = acreditado.Ingresos.First();
-                        fechaIngreso = primerIngreso.FechaOperacion.ToString("dd/MM/yyyy");
-                        horaIngreso = primerIngreso.FechaOperacion.ToString("HH:mm:ss");
-                    }
-
-                    //Obtener la fecha y hora de egreso
-                    string fechaEgreso = "-";
-                    string horaEgreso = "-";
-                    if (acreditado.Egresos.Any())
-                    {
-                        var primerEgreso = acreditado.Egresos.First();
-                        fechaEgreso = primerEgreso.FechaOperacion.ToString("dd/MM/yyyy");
-                        horaEgreso = primerEgreso.FechaOperacion.ToString("HH:mm:ss");
-                    }
-
-                    dataTable.Rows.Add(
-                        acreditado.Nombre,
-                        acreditado.Apellido,
-                        acreditado.Dni,
-                        acreditado.Cuit,
-                        acreditado.Celular,
-                        acreditado.Grupo,
-                        acreditado.Habilitado ? "Sí" : "No",
-                        acreditado.Alta ? "Sí" : "No",
-                        fechaIngreso,
-                        horaIngreso,
-                        fechaEgreso,
-                        horaEgreso
-                    );
+                    Utilities.AddRowAcreditado(acreditado, dataTable);
                 }
 
+                //Exportar el archivo con registros
                 using (XLWorkbook wb = new XLWorkbook())
                 {
                     wb.Worksheets.Add(dataTable);

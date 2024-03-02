@@ -1,6 +1,7 @@
 ﻿using AsistManager.Models;
 using ExcelDataReader;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Globalization;
 using System.Text;
 
@@ -75,6 +76,47 @@ namespace AsistManager.Helpers
                 Habilitado = habilitado,
                 Alta = alta
             };
+        }
+
+        public static void AddRowAcreditado(Acreditado acreditado, DataTable dataTable)
+        {
+            string fechaIngreso = "-";
+            string horaIngreso = "-";
+
+            string fechaEgreso = "-";
+            string horaEgreso = "-";
+
+            //Obtener la fecha y hora de ingreso
+            if (acreditado.Ingresos.Any())
+            {
+                var primerIngreso = acreditado.Ingresos.First();
+                fechaIngreso = primerIngreso.FechaOperacion.ToString("dd/MM/yyyy");
+                horaIngreso = primerIngreso.FechaOperacion.ToString("HH:mm:ss");
+            }
+
+            //Obtener la fecha y hora de egreso
+            if (acreditado.Egresos.Any())
+            {
+                var primerEgreso = acreditado.Egresos.First();
+                fechaEgreso = primerEgreso.FechaOperacion.ToString("dd/MM/yyyy");
+                horaEgreso = primerEgreso.FechaOperacion.ToString("HH:mm:ss");
+            }
+
+            //Por cada registro, escribo en el excel
+            dataTable.Rows.Add(
+                acreditado.Nombre,
+                acreditado.Apellido,
+                acreditado.Dni,
+                acreditado.Cuit,
+                acreditado.Celular,
+                acreditado.Grupo,
+                acreditado.Habilitado ? "Sí" : "No",
+                acreditado.Alta ? "Sí" : "No",
+                fechaIngreso,
+                horaIngreso,
+                fechaEgreso,
+                horaEgreso
+            );
         }
     }
 }
