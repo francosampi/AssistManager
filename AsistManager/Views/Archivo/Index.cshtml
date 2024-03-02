@@ -123,22 +123,30 @@
 
 @section Scripts{
     <script>
+
         function alCargarArchivo() {
+
+            function toggleInsertButtonAndTable() {
+                insertBtn.disabled = !inputBtn.files || inputBtn.files.length === 0;
+            }
+
             const inputBtn = document.getElementById("fileInput");
             const insertBtn = document.getElementById("insertButton");
             const tablaRegistros = document.getElementById("tabla-registros-alcargar");
 
             const formData = new FormData();
 
-            function toggleInsertButtonAndTable() {
-                insertBtn.disabled = !inputBtn.files || inputBtn.files.length === 0;
-            }
-
+            //Escuchar si hubo un cambio en el input de importar archivo
             inputBtn.addEventListener("change", toggleInsertButtonAndTable);
 
+            //Habilitar insertar registros
             toggleInsertButtonAndTable();
 
+            //Obtener archivo del input
             formData.append("file", inputBtn.files[0]);
+
+            //Antes de mostrar los registros, vaciar la tabla
+            $("#tabla-registros-alcargar tbody").empty();
 
             //Hacer petición al Read para devolver los registros del excel en JSON
             fetch("/Archivo/Read", {

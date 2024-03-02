@@ -1,6 +1,5 @@
 ﻿using AsistManager.Models;
 using ExcelDataReader;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Globalization;
 using System.Text;
@@ -64,7 +63,7 @@ namespace AsistManager.Helpers
             bool habilitado = Utilities.EsCampoVerdadero(reader.GetValue(6)?.ToString() ?? "");
             bool alta = Utilities.EsCampoVerdadero(reader.GetValue(7)?.ToString() ?? "");
 
-            //Crear una instancia si todos los campos requeridos tienen valor
+            //Crear una instancia
             return new Acreditado
             {
                 Nombre = nombre,
@@ -78,11 +77,11 @@ namespace AsistManager.Helpers
             };
         }
 
+        //Crear una row en excel con info de un acreditado
         public static void AddRowAcreditado(Acreditado acreditado, DataTable dataTable)
         {
             string fechaIngreso = "-";
             string horaIngreso = "-";
-
             string fechaEgreso = "-";
             string horaEgreso = "-";
 

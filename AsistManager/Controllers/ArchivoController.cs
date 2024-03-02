@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging;
 
 namespace AsistManager.Controllers
 {
@@ -247,6 +245,7 @@ namespace AsistManager.Controllers
             return RedirectToAction("Menu", "Evento", new {id = id});
         }
 
+        //Exportar molde excel
         public IActionResult ExportSheet()
         {
             //Obtener excel precargado, leerlo y descargarlo
@@ -263,6 +262,7 @@ namespace AsistManager.Controllers
             return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "registros.xlsx");
         }
 
+        //Exportar archivo excel con sus acreditados, egresos y egresos
         public FileResult ExportAccredited(int id)
         {
             var evento = _context.Eventos.Find(id);
