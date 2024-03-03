@@ -111,7 +111,7 @@ namespace AsistManager.Controllers
             var evento = _context.Eventos.Find(id);
 
             //Verificar si no existe un acreditado con ese DNI actualmente
-            var existingAcreditado = await _context.Acreditados.FirstOrDefaultAsync(a => a.Dni == model.Dni);
+            var existingAcreditado = await _context.Acreditados.FirstOrDefaultAsync(a => a.Dni == model.Dni && a.IdEvento == id);
 
             if (existingAcreditado != null)
             {

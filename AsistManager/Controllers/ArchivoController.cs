@@ -166,7 +166,7 @@ namespace AsistManager.Controllers
                                     //Por cada registro, generar un objeto
                                     Acreditado? acreditado = Utilities.LeerFilaExcelAcreditado(reader);
 
-                                    var existingAcreditado = await _context.Acreditados.FirstOrDefaultAsync(a => a.Dni == acreditado.Dni);
+                                    var existingAcreditado = await _context.Acreditados.FirstOrDefaultAsync(a => a.Dni == acreditado.Dni && a.IdEvento == id);
 
                                     //Verificar si alguno de los campos requeridos está vacío
                                     if (string.IsNullOrWhiteSpace(acreditado.Nombre) ||
