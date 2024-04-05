@@ -1,7 +1,7 @@
-# AsistManager
+# AssistManager
 
 ## Descripción
-AsistManager es una aplicación web ASP.NET para la gestión de eventos y acreditados. Permite a los usuarios administrar eventos, agregar y eliminar acreditados, registrar ingresos y egresos, entre otras funcionalidades.
+AssistManager es una aplicación web ASP.NET para la gestión de eventos y acreditados. Permite a los usuarios administrar eventos, agregar y eliminar acreditados, registrar ingresos y egresos, entre otras funcionalidades.
 
 ## Características principales
 
